@@ -3710,6 +3710,52 @@ textarea.form-control {
   min-height: 800px;
 }
 
+.slide-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* ทำให้ Slide เต็มจอ */
+  text-align: center;
+  position: relative;
+}
+
+.bg-img img {
+  width: 100%;
+  height: 100vh;
+  object-fit: cover; /* ป้องกันรูปภาพผิดสัดส่วน */
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.slide__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.3); /* เพิ่มพื้นหลังโปร่งใสให้ข้อความอ่านง่ายขึ้น */
+  border-radius: 10px;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+}
+
+.slide__title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: white;
+}
+
+.slide__title1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: white;
+}
+
+
 .slider-1 .thumbs-dots {
   position: absolute;
   left: 15px;

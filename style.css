@@ -1,0 +1,55 @@
+/* ==============================
+   ทำให้ Slide เต็มจอและข้อความอยู่ตรงกลาง
+================================= */
+.slide-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* สูงเต็มจอ */
+  text-align: center;
+  color: white;
+}
+
+/* ==============================
+   ตั้งค่า Background Image ให้เต็มจอ
+================================= */
+.bg-img img {
+  width: 100%;
+  height: 100vh;
+  object-fit: cover; /* ป้องกันรูปเบี้ยว */
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* ==============================
+   ปรับข้อความให้ชัดเจนและอ่านง่าย
+================================= */
+.slide__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.3); /* พื้นหลังโปร่งใสให้ข้อความอ่านง่ายขึ้น */
+  border-radius: 10px;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+}
+
+/* ==============================
+   ปรับขนาดตัวอักษรของข้อความ
+================================= */
+.slide__title {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.slide__title1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
