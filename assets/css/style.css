@@ -2388,7 +2388,7 @@ textarea.form-control {
   border-bottom: 0 !important;
   height: 90px;
   max-height: 90px;
-  background-color: #ffffff !important;
+  background-color: #7E51C8 !important;  /* สีของ nav */
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.07);
   -webkit-animation: translateHeader 0.8s;
   -moz-animation: translateHeader 0.8s;
