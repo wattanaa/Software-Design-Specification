@@ -36,7 +36,7 @@
   justify-content: center;
   width: 100%;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.3); /* พื้นหลังโปร่งใสให้ข้อความอ่านง่ายขึ้น */
+  background: rgba(0, 0, 0, 0.1); /* พื้นหลังโปร่งใสให้ข้อความอ่านง่ายขึ้น */
   border-radius: 10px;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
 }

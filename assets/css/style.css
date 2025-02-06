@@ -2007,7 +2007,10 @@ textarea.form-control {
 
 .navbar .logo-light {
   display: none;
+  width: 30%;
+  height: 30%;
 }
+
 
 .navbar .navbar-toggler {
   padding: 0;
@@ -2328,6 +2331,8 @@ textarea.form-control {
 
 .header-transparent .logo-dark {
   display: none;
+  width: 30%;
+  height: 30%;
 }
 
 .header-transparent .module__btn,
