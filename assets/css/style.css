@@ -7332,4 +7332,10 @@ textarea.form-control {
   }
 }
 
-/*# sourceMappingURL=style.css.map */
+
+.bbox{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
