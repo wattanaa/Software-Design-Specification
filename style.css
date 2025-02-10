@@ -53,3 +53,7 @@
   font-size: 1.8rem;
   font-weight: 600;
 }
+
+.carousel-inner {
+  transition: transform 1s ease-in-out; /* ทำให้การเลื่อนนุ่มขึ้น */
+}
