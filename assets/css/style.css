@@ -7470,3 +7470,54 @@ textarea.form-control {
 .icon-buttons i:hover {
   color: #007bff;
 }
+
+
+.item {
+  background: #f8f8f8;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item:hover {
+  background: #e0e0e0;
+}
+
+.details {
+  display: none;
+  padding: 10px;
+  border-left: 5px solid #4CAF50;
+  background: #f1f1f1;
+  margin-top: -5px;
+  border-radius: 0 0 8px 8px;
+}
+
+.details.active {
+  display: block;
+}
+
+.button-container {
+  margin-top: 10px;
+}
+
+.btn {
+  padding: 8px 12px;
+  margin: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn.reject {
+  background: #e74c3c;
+  color: white;
+}
+
+.btn.approve {
+  background: #2ecc71;
+  color: white;
+}
