@@ -7354,3 +7354,119 @@ textarea.form-control {
   height: 400px;
   object-fit: cover;
 }
+
+/* ปรับแต่ง dropdown */
+.profile-dropdown {
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 150px;
+  text-align: center;
+}
+
+.profile-dropdown .dropdown-item {
+  padding: 10px;
+}
+
+.profile-dropdown .dropdown-divider {
+  margin: 0;
+}
+
+.profile-icon {
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: black;
+  cursor: pointer;
+}
+
+.status-box {
+  text-align: center;
+  font-weight: bold;
+  font-size: 24px;
+  padding: 15px;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.status-box span {
+  display: block;
+  font-size: 16px;
+  color: black;
+}
+
+.incoming {
+  color: red;
+}
+
+.wait-payment {
+  color: orange;
+}
+
+.complete {
+  color: limegreen;
+}
+
+.booking-list {
+  margin-top: 20px;
+}
+
+.booking-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.booking-item:hover {
+  transform: scale(1.02);
+}
+
+.status-indicator {
+  width: 12px;
+  height: 100%;
+  border-radius: 6px;
+}
+
+.status-red {
+  background-color: red;
+}
+
+.status-orange {
+  background-color: orange;
+}
+
+.status-green {
+  background-color: limegreen;
+}
+
+.booking-info {
+  flex-grow: 1;
+  padding: 0 15px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.icon-buttons {
+  display: flex;
+  gap: 15px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.icon-buttons i {
+  transition: color 0.2s;
+}
+
+.icon-buttons i:hover {
+  color: #007bff;
+}

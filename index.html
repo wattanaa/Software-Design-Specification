@@ -12,6 +12,7 @@
   <link href="assets/icons/logobtm.png" rel="icon">
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css?family=Roboto:400,700%7cWork+Sans:400,600,700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
   <link rel="stylesheet" href="assets/css/libraries.css" />
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
@@ -31,11 +32,28 @@
           <a class="navbar-brand" href="index.html">
             <img src="assets/icons/logolight.png" class="logo1 logo-light" alt="logo">
             <img src="assets/icons/logolight.png" class="logo1 logo-dark" alt="logo">
-            <a href="./login.html" style="color: whitesmoke"><i class="icon-user_male"></i><span>เข้าสู่ระบบ</span></a>
+            <!-- <a href="./login.html" style="color: whitesmoke"><i class="icon-user_male"></i><span>เข้าสู่ระบบ</span></a> -->
           </a>
           <button class="navbar-toggler" type="button">
             <span class="menu-lines"><span></span></span>
           </button>
+
+          <!-- Dropdown Profile -->
+          <div class="dropdown">
+            <button class="btn profile-icon" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <i class="bi bi-person"></i> <!-- ไอคอนโปรไฟล์ -->
+            </button>
+            <ul class="dropdown-menu profile-dropdown dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+              <li><a class="dropdown-item" href="./login.html">เข้าสู่ระบบ</a></li>
+              <li><a class="dropdown-item" href="./cancel.html">รายการคำขอ</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item text-danger" href="./index.html">log out</a></li>
+            </ul>
+          </div>
+
       </nav><!-- /.navabr -->
     </header>
 
