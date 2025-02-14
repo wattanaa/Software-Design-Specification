@@ -57,3 +57,41 @@
 .carousel-inner {
   transition: transform 1s ease-in-out; /* ทำให้การเลื่อนนุ่มขึ้น */
 }
+
+
+.bbox .card {
+  border: 2px solid #28a745;
+  border-radius: 15px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.bbox .card:hover {
+  transform: scale(1.05);
+  box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.bbox .card-title {
+  color: #007bff;
+  font-weight: bold;
+}
+
+.bbox .card-subtitle {
+  color: #6c757d;
+  font-weight: bold;
+}
+
+.bbox .card-text {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.bbox ul {
+  list-style: none;
+  padding: 0;
+}
+
+.bbox ul li {
+  font-size: 16px;
+  padding: 5px 0;
+}
