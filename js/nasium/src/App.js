@@ -75,14 +75,28 @@ function Room1() {
     }
 
     const data = await response.json();
-    return data.items.map(event => ({
-      title: event.summary,
-      start: new Date(event.start.dateTime || event.start.date),
-      end: new Date(event.end.dateTime || event.end.date),
-      isBooked: true,
-      description: event.description // เก็บ description สำหรับแสดงในปฏิทิน
-    }));
+    return data.items.map(event => {
+      let status = "รอชำระเงิน"; // ✅ ค่าเริ่มต้น (Default)
+
+      // ✅ ตรวจสอบว่า "description" มีค่าหรือไม่ (ป้องกัน Error)
+      const desc = event.description?.trim() || ""; // ✅ ใช้ `trim()` เพื่อลบช่องว่าง
+      const statusMatch = desc.match(/สถานะ:\s*(อนุมัติ|ปฏิเสธ)/);
+
+      if (statusMatch) {
+        status = statusMatch[1]; // ✅ ดึงค่าที่ตรงกับ "อนุมัติ" หรือ "ปฏิเสธ"
+      }
+
+      return {
+        id: event.id, // ✅ เก็บ ID ของ event เพื่อใช้แก้ไขภายหลัง
+        title: event.summary || "ไม่ระบุหัวข้อ", // ✅ ป้องกัน null title
+        start: new Date(event.start.dateTime || event.start.date),
+        end: new Date(event.end.dateTime || event.end.date),
+        description: desc || "ไม่มีรายละเอียด", // ✅ ป้องกัน null description
+        status, // ✅ ใส่สถานะของแต่ละ event
+      };
+    });
   }
+
 
   const getDayEvents = (date) => {
     return events.filter(event => {
@@ -174,18 +188,29 @@ function Room1() {
 
 
   const eventPropGetter = (event) => {
-    const backgroundColor = getCalendarStatus(event.start);
+    let backgroundColor = "#42a5f5"; // สีเริ่มต้น (ฟ้า)
+
+    // ✅ กำหนดสีตาม "สถานะ"
+    if (event.status === "รอชำระเงิน") {
+      backgroundColor = "#FFFF00"; // สีเหลือง
+    } else if (event.status === "อนุมัติ") {
+      backgroundColor = "#00FF00"; // สีเขียว
+    } else if (event.status === "ปฏิเสธ") {
+      backgroundColor = "#FF0000"; // สีแดง
+    }
+
     return {
       style: {
         backgroundColor,
         borderRadius: '5px',
         opacity: 0.8,
-        color: 'white',
+        color: 'black', // ใช้สีดำแทนขาวเพื่อให้อ่านง่ายขึ้นในบางสี
         border: '0px',
         display: 'block',
       },
     };
   };
+
 
   async function createCalendarEvent() {
     //-----------------------------------//
@@ -239,13 +264,14 @@ function Room1() {
     }
 
     const event = {
-      summary: "จองอาคารนนทบุรียิมเนเซียม(สนามฟุตบอล)",
+      summary: "จองอาคารนนทบุรียิมเนเซียม",
       description: `📌 **รายละเอียดการจอง**
     - ชื่อผู้จอง: ${eventName}
     - เบอร์โทรศัพท์: ${phone}
     - Email ของผู้จอง: ${email}
     - องค์กร/สำนักงาน: ${organization}
-    - วัตถุประสงค์ของการใช้: ${purpose}`,
+    - วัตถุประสงค์ของการใช้: ${purpose}
+    - **สถานะ: รอชำระเงิน**`,
 
       start: {
         dateTime: newStart.toISOString(), // ใช้ ISOString เพื่อให้แน่ใจว่าเป็นรูปแบบ UTC
@@ -366,33 +392,33 @@ function Room1() {
                   color: "white",
                   padding: "5px 10px",
                   borderRadius: "5px",
-                  fontSize: "14px",
+                  fontSize: "15px",
                   textAlign: "center",
                   width: "150px"
                 }}>
-                  การจองเต็มทั้งวัน
+                  การจองที่โดนปฎิเสธ
+                </div>
+                <div style={{
+                  backgroundColor: "yellow",
+                  color: "black",
+                  padding: "5px 10px",
+                  borderRadius: "5px",
+                  fontSize: "15px",
+                  textAlign: "center",
+                  width: "150px"
+                }}>
+                  การจองที่รออนุมัติ
                 </div>
                 <div style={{
                   backgroundColor: "green",
                   color: "white",
-                  padding: "5px 10px",
+                  padding: "5px 13px",
                   borderRadius: "5px",
-                  fontSize: "14px",
+                  fontSize: "15px",
                   textAlign: "center",
                   width: "150px"
                 }}>
-                  การจองว่างในบางเวลา
-                </div>
-                <div style={{
-                  backgroundColor: "gray",
-                  color: "white",
-                  padding: "5px 10px",
-                  borderRadius: "5px",
-                  fontSize: "14px",
-                  textAlign: "center",
-                  width: "150px"
-                }}>
-                  การจองว่างทั้งวัน
+                  การจองที่ผ่านการอนุมัติ
                 </div>
               </div>
 
@@ -425,7 +451,7 @@ function Room1() {
 
             <hr />
             <div style={formContainer}>
-              <h3 style={headerStyle}>📅 แบบฟอร์มอาคารนนทบุรียิมเนเซียม</h3>
+              <h3 style={headerStyle}>📅 แบบฟอร์มจองอาคารนนทบุรียิมเนเซียม</h3>
 
               <div style={formGroup}>
                 <label style={labelStyle}>👤 ชื่อผู้จอง:</label>
