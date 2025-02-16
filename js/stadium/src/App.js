@@ -20,6 +20,19 @@ function Room1() {
   const [organization, setOrganization] = useState(""); // องค์กร/สำนักงาน
   const [purpose, setPurpose] = useState(""); // วัตถุประสงค์ของการใช้
 
+  const [stadiumZone, setStadiumZone] = useState(""); // เลือกโซนสนาม
+  const [lighting, setLighting] = useState(false); // ระบบไฟฟ้า
+  const [soundSystem, setSoundSystem] = useState(false); // ระบบเสียง
+  const [internet, setInternet] = useState(false); // ระบบอินเทอร์เน็ต
+
+  const [athleteRoom, setAthleteRoom] = useState(false); // ห้องพักนักกีฬา
+  const [medicalRoom, setMedicalRoom] = useState(false); // ห้องพยาบาล
+  const [vipRoom, setVipRoom] = useState(false); // ห้อง VIP
+  const [pressRoom, setPressRoom] = useState(false); // ห้องแถลงข่าว
+
+  const [cleaningOption, setCleaningOption] = useState(""); // การทำความสะอาด
+
+
   const [additionalItems, setAdditionalItems] = useState({
     projector: 0,
     laserPointer: 0,
@@ -237,6 +250,65 @@ function Room1() {
       return;
     }
 
+    // ✅ ตรวจสอบอีเมล
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!email.trim() || !emailPattern.test(email)) {
+      Swal.fire({
+        icon: "warning",
+        title: "รูปแบบอีเมลไม่ถูกต้อง",
+        text: "กรุณากรอกอีเมลที่ถูกต้อง เช่น example@gmail.com",
+        confirmButtonText: "ตกลง",
+        confirmButtonColor: "#ffc107"
+      });
+      return;
+    }
+
+    if (!organization.trim()) {
+      Swal.fire({
+        icon: "warning",
+        title: "กรุณากรอกชื่อองค์กร",
+        text: "กรุณาใส่ชื่อองค์กร/สำนักงานของคุณก่อนทำการจอง",
+        confirmButtonText: "ตกลง",
+        confirmButtonColor: "#ffc107"
+      });
+      return;
+    }
+
+    if (!stadiumZone) {
+      Swal.fire({
+        icon: "warning",
+        title: "กรุณาเลือกโซนสนาม",
+        text: "ต้องเลือกโซนสนามก่อนจอง",
+        confirmButtonText: "ตกลง",
+        confirmButtonColor: "#ffc107"
+      });
+      return;
+    }
+
+    if (startHour >= endHour) {
+      Swal.fire({
+        icon: "error",
+        title: "เวลาจองไม่ถูกต้อง",
+        text: "เวลาเริ่มต้นต้องน้อยกว่าเวลาสิ้นสุด",
+        confirmButtonText: "ตกลง",
+        confirmButtonColor: "#d33"
+      });
+      return;
+    }
+
+    if (!cleaningOption) {
+      Swal.fire({
+        icon: "warning",
+        title: "กรุณาเลือกวิธีทำความสะอาด",
+        text: "กรุณาเลือกว่าผู้ใช้หรือสถานที่เป็นผู้ทำความสะอาด",
+        confirmButtonText: "ตกลง",
+        confirmButtonColor: "#ffc107"
+      });
+      return;
+    }
+
+
+
     //-----------------------------------//
 
     const newStart = new Date(selectedDate);
@@ -265,13 +337,31 @@ function Room1() {
 
     const event = {
       summary: "จองสนามฟุตบอลนนทบุรีสเตเดียม",
-      description: `📌 **รายละเอียดการจอง**
-    - ชื่อผู้จอง: ${eventName}
-    - เบอร์โทรศัพท์: ${phone}
-    - Email ของผู้จอง: ${email}
-    - องค์กร/สำนักงาน: ${organization}
-    - วัตถุประสงค์ของการใช้: ${purpose}
-    - **สถานะ: รอชำระเงิน**`,
+      description: `📌 **รายละเอียดการจอง**  
+  👤 ชื่อผู้จอง: ${eventName}  
+  📞 เบอร์โทรศัพท์: ${phone}  
+  📧 Email: ${email}  
+  🏢 องค์กร: ${organization}  
+  🎯 วัตถุประสงค์: ${purpose}  
+  
+  ⚽ **สนามแข่งขัน:** ${stadiumZone}  
+  
+  🔌 **ระบบที่ต้องใช้:** ${[
+          lighting ? "ไฟฟ้า" : "",
+          soundSystem ? "เสียง" : "",
+          internet ? "อินเทอร์เน็ต" : ""
+        ].filter(Boolean).join(", ")}
+  
+  🏢 **ห้องที่ใช้:** ${[
+          athleteRoom ? "ห้องพักนักกีฬา" : "",
+          medicalRoom ? "ห้องพยาบาล" : "",
+          vipRoom ? "ห้อง VIP" : "",
+          pressRoom ? "ห้องแถลงข่าว" : ""
+        ].filter(Boolean).join(", ")}
+  
+  🧹 **การทำความสะอาด:** ${cleaningOption}  
+  
+  ✅ **สถานะ: รอชำระเงิน**`,
 
       start: {
         dateTime: newStart.toISOString(), // ใช้ ISOString เพื่อให้แน่ใจว่าเป็นรูปแบบ UTC
@@ -311,8 +401,6 @@ function Room1() {
             setEvents(fetchedEvents);
           });
 
-          // รีเซ็ตค่าฟอร์มให้เป็นค่าเริ่มต้น
-          // รีเซ็ตค่าฟอร์มให้เป็นค่าเริ่มต้น
           setEventName("");
           setPhone("");
           setEmail("");
@@ -322,11 +410,15 @@ function Room1() {
           setSelectedDate(new Date());
           setStartHour(8);
           setEndHour(9);
-          setAdditionalItems({
-            projector: 0,
-            laserPointer: 0,
-            microphone: 0
-          });
+          setStadiumZone("");
+          setLighting(false);
+          setSoundSystem(false);
+          setInternet(false);
+          setAthleteRoom(false);
+          setMedicalRoom(false);
+          setVipRoom(false);
+          setPressRoom(false);
+          setCleaningOption("");
         });
       })
 
@@ -496,26 +588,212 @@ function Room1() {
                 </div>
               </div>
 
-              <div style={timeSelectContainer}>
-                <div style={timeSelectGroup}>
-                  <label style={labelStyle}>⏰ เวลาเริ่มจอง:</label>
-                  <select value={startHour} onChange={e => setStartHour(parseInt(e.target.value))} style={inputStyle}>
+              <div style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "15px",
+                backgroundColor: "#F9F9F9",
+                padding: "15px",
+                borderRadius: "10px"
+              }}>
+                {/* ⏳ เวลาเริ่ม & ⌛ เวลาสิ้นสุด */}
+                <div style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "15px",
+                  justifyContent: "center"
+                }}>
+                  <label>⏳ เวลาเริ่ม:</label>
+                  <select value={startHour} onChange={e => setStartHour(parseInt(e.target.value))}
+                    style={{ padding: "8px", borderRadius: "6px", border: "1px solid #ccc" }}>
                     {[...Array(11)].map((_, index) => (
                       <option key={index} value={index + 8}>{index + 8}:00</option>
                     ))}
                   </select>
-                </div>
 
-                <div style={timeSelectGroup}>
-                  <label style={labelStyle}>⏳ เวลาสิ้นสุดจอง:</label>
-                  <select value={endHour} onChange={e => setEndHour(parseInt(e.target.value))} style={inputStyle}>
+                  <label>⌛ เวลาสิ้นสุด:</label>
+                  <select value={endHour} onChange={e => setEndHour(parseInt(e.target.value))}
+                    style={{ padding: "8px", borderRadius: "6px", border: "1px solid #ccc" }}>
                     {[...Array(11)].map((_, index) => (
                       <option key={index} value={index + 9}>{index + 9}:00</option>
                     ))}
                   </select>
                 </div>
+
+                {/* ⚽ สนามแข่งขัน */}
+                <div style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  justifyContent: "center"
+                }}>
+                  <label>⚽ สนามแข่งขัน:</label>
+                  <select value={stadiumZone} onChange={e => setStadiumZone(e.target.value)}
+                    style={{ padding: "8px", borderRadius: "6px", border: "1px solid #ccc" }}>
+                    <option value="">เลือกโซน</option>
+                    <option value="โซน A (ม่วง+VIP)">โซน A ด้านหลังฝั่งประธาน (ม่วง)+VIP</option>
+                    <option value="โซน B (เขียว)">โซน B ด้านมีหลังคา (เขียว)</option>
+                    <option value="โซน C1,C2 (ส้ม)">โซน C1,C2 ฝั่งประธาน (ส้ม)</option>
+                    <option value="โซน C3,C4 (ส้ม)">โซน C3,C4 (ส้ม)</option>
+                    <option value="โซน D1 (เหลือง)">โซน D1 ด้านคนพลัง (เหลือง)</option>
+                    <option value="โซน D2 (เหลือง)">โซน D2 ด้านสกรอบออร์ต (เหลือง)</option>
+                  </select>
+                </div>
+                {/* กล่องหลัก (แบ่งเป็น 3 คอลัมน์) */}
+                <div style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr 1fr",
+                  gap: "20px",
+                  padding: "20px",
+                  backgroundColor: "#F9F9F9",
+                  borderRadius: "10px"
+                }}>
+                  <div style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "20px",
+                    justifyContent: "flex-start"
+                  }}>
+
+                    {/* 🔧 ระบบที่ต้องใช้ */}
+                    <div style={{
+                      backgroundColor: "#E3F2FD", // สีฟ้าอ่อน
+                      padding: "15px",
+                      borderRadius: "8px",
+                      minWidth: "280px",
+                      textAlign: "left"
+                    }}>
+                      <label style={{
+                        fontWeight: "bold",
+                        fontSize: "16px",
+                        display: "block",
+                        marginBottom: "10px"
+                      }}>
+                        🔧 ระบบที่ต้องใช้:
+                      </label>
+                      <div style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start", // ✅ ชิดซ้าย
+                        gap: "8px"
+                      }}>
+                        <label style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "flex-start",
+                          gap: "10px",
+                          whiteSpace: "nowrap" // ✅ ทำให้ข้อความอยู่บรรทัดเดียว
+                        }}>
+                          <input type="checkbox" checked={lighting} onChange={() => setLighting(!lighting)} />
+                          ไฟฟ้าส่องสว่าง
+                        </label>
+                        <label style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "flex-start",
+                          gap: "10px",
+                          whiteSpace: "nowrap"
+                        }}>
+                          <input type="checkbox" checked={soundSystem} onChange={() => setSoundSystem(!soundSystem)} />
+                          ระบบเสียง
+                        </label>
+                        <label style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "flex-start",
+                          gap: "10px",
+                          whiteSpace: "nowrap"
+                        }}>
+                          <input type="checkbox" checked={internet} onChange={() => setInternet(!internet)} />
+                          อินเทอร์เน็ต
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* 🏢 ห้องกิจกรรมที่ต้องใช้ */}
+                    <div style={{
+                      backgroundColor: "#E8F5E9", // สีเขียวอ่อน
+                      padding: "15px",
+                      borderRadius: "8px",
+                      minWidth: "280px",
+                      textAlign: "left"
+                    }}>
+                      <label style={{
+                        fontWeight: "bold",
+                        fontSize: "16px",
+                        display: "block",
+                        marginBottom: "10px"
+                      }}>
+                        🏢 ห้องที่ต้องใช้:
+                      </label>
+                      <div style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        gap: "8px"
+                      }}>
+                        <label style={{ display: "flex", alignItems: "center", gap: "10px", whiteSpace: "nowrap" }}>
+                          <input type="checkbox" checked={athleteRoom} onChange={() => setAthleteRoom(!athleteRoom)} />
+                          ห้องพักนักกีฬา
+                        </label>
+                        <label style={{ display: "flex", alignItems: "center", gap: "10px", whiteSpace: "nowrap" }}>
+                          <input type="checkbox" checked={medicalRoom} onChange={() => setMedicalRoom(!medicalRoom)} />
+                          ห้องพยาบาล
+                        </label>
+                        <label style={{ display: "flex", alignItems: "center", gap: "10px", whiteSpace: "nowrap" }}>
+                          <input type="checkbox" checked={vipRoom} onChange={() => setVipRoom(!vipRoom)} />
+                          ห้อง VIP
+                        </label>
+                        <label style={{ display: "flex", alignItems: "center", gap: "10px", whiteSpace: "nowrap" }}>
+                          <input type="checkbox" checked={pressRoom} onChange={() => setPressRoom(!pressRoom)} />
+                          ห้องแถลงข่าว
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* 🧹 การทำความสะอาด */}
+                    <div style={{
+                      backgroundColor: "#FFF3E0", // สีส้มอ่อน
+                      padding: "15px",
+                      borderRadius: "8px",
+                      minWidth: "280px",
+                      textAlign: "left"
+                    }}>
+                      <label style={{
+                        fontWeight: "bold",
+                        fontSize: "16px",
+                        display: "block",
+                        marginBottom: "10px"
+                      }}>
+                        🧹 การทำความสะอาด:
+                      </label>
+                      <div style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        gap: "8px"
+                      }}>
+                        <label style={{ display: "flex", alignItems: "center", gap: "10px", whiteSpace: "nowrap" }}>
+                          <input type="radio" name="cleaning" value="ผู้ใช้รับผิดชอบ" onChange={() => setCleaningOption("ผู้ใช้รับผิดชอบ")} />
+                          ให้ผู้ใช้ทำความสะอาด
+                        </label>
+                        <label style={{ display: "flex", alignItems: "center", gap: "10px", whiteSpace: "nowrap" }}>
+                          <input type="radio" name="cleaning" value="สถานที่เป็นผู้ดำเนินการ" onChange={() => setCleaningOption("สถานที่เป็นผู้ดำเนินการ")} />
+                          ให้สถานที่ดำเนินการ
+                        </label>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
               </div>
             </div>
+
+
+
+
 
             <hr />
             <div className="button-group">
@@ -621,7 +899,7 @@ function Room1() {
 
         )}
       </div>
-    </div>
+    </div >
   );
 }
 
