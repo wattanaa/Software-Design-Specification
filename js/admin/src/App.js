@@ -37,7 +37,7 @@ function RoomAdmin() {
   }, []);
 
 
-  
+
   const eventStyleGetter = (event) => {
     let backgroundColor = "#FFFF00"; // ค่าเริ่มต้น (กรณีไม่มีสถานะ)
 
@@ -64,10 +64,11 @@ function RoomAdmin() {
 
   const [selectedCalendarName, setSelectedCalendarName] = useState("");
 
-  // ฟังก์ชันเปลี่ยนห้องและอัปเดตชื่อปฏิทิน
-  const handleRoomChange = (roomNumber, calendarName) => {
+  // ✨ ปรับฟังก์ชันเปลี่ยนห้องให้เปลี่ยนสีกรอบด้วย
+  const handleRoomChange = (roomNumber, calendarName, borderColor) => {
     setCurrentRoom(roomNumber);
     setSelectedCalendarName(calendarName);
+    setCalendarBorderColor(borderColor); // ✅ อัปเดตสีกรอบปฏิทิน
   };
 
 
@@ -108,6 +109,62 @@ function RoomAdmin() {
   const [totalBookingsRoom4, setTotalBookingsRoom4] = useState(0);
   const [totalBookingsRoom5, setTotalBookingsRoom5] = useState(0);
   const [totalBookingsRoom6, setTotalBookingsRoom6] = useState(0);
+
+  // ✅ ฟังก์ชันลบการจอง
+  const handleDeleteEvent = async () => {
+    if (!selectedEvent) return;
+
+    Swal.fire({
+      title: "คุณแน่ใจหรือไม่?",
+      text: "ต้องการลบการจองนี้?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "ใช่, ลบเลย!",
+      cancelButtonText: "ยกเลิก"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch(
+            `https://www.googleapis.com/calendar/v3/calendars/${selectedEvent.calendarId}/events/${selectedEvent.id}`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${session.provider_token}`,
+              },
+            }
+          );
+
+          if (response.ok) {
+            Swal.fire("ลบสำเร็จ!", "การจองถูกลบเรียบร้อยแล้ว", "success");
+
+            // ✅ อัปเดตอีเวนต์ในปฏิทินใหม่
+            switch (currentRoom) {
+              case 1: getCalendarEventsRoom1().then(setEventsRoom1); break;
+              case 2: getCalendarEventsRoom2().then(setEventsRoom2); break;
+              case 3: getCalendarEventsRoom3().then(setEventsRoom3); break;
+              case 4: getCalendarEventsRoom4().then(setEventsRoom4); break;
+              case 5: getCalendarEventsRoom5().then(setEventsRoom5); break;
+              case 6: getCalendarEventsRoom6().then(setEventsRoom6); break;
+              default: break;
+            }
+
+            setShowModal(false);
+          } else {
+            Swal.fire("ผิดพลาด!", "ไม่สามารถลบการจองได้", "error");
+          }
+        } catch (error) {
+          console.error("Error deleting event:", error);
+          Swal.fire("ผิดพลาด!", "เกิดข้อผิดพลาดในการลบ", "error");
+        }
+      }
+    });
+  };
+
+
+  // ✨ เพิ่ม state เก็บสีกรอบปฏิทิน
+  const [calendarBorderColor, setCalendarBorderColor] = useState("#42a5f5"); // ค่าเริ่มต้นสีของห้อง 1
 
   useEffect(() => {
     if (session) {
@@ -609,10 +666,10 @@ function RoomAdmin() {
               ยินดีต้อนรับ, {session?.user?.email} เข้าสู่ระบบจัดการจอง
             </h2>
 
-            <a href="#" onClick={() => handleRoomChange(1, "ปฎิทินอาคารนนทบุรียิมเนเซียม")} className="btn mx-2 my-1" style={{ backgroundColor: '#42a5f5', color: 'white' }}>ปฎิทินอาคารนนทบุรียิมเนเซียม</a>
-            <a href="#" onClick={() => handleRoomChange(2, "ปฎิทินสนามกีฬาหญ้าเทียม")} className="btn mx-2 my-1" style={{ backgroundColor: '#66bb6a', color: 'white' }}>ปฎิทินสนามกีฬาหญ้าเทียม</a>
-            <a href="#" onClick={() => handleRoomChange(3, "ปฎิทินสระว่ายน้ำนนทบุรี")} className="btn mx-2 my-1" style={{ backgroundColor: '#ff8c00', color: 'white' }}>ปฎิทินสระว่ายน้ำนนทบุรี</a>
-            <a href="#" onClick={() => handleRoomChange(4, "ปฎิทินสนามฟุตบอลนนทบุรีสเตเดียม")} className="btn mx-2 my-1" style={{ backgroundColor: '#ff5733', color: 'white' }}>ปฎิทินสนามฟุตบอลนนทบุรีสเตเดียม</a>
+            <a href="#" onClick={() => handleRoomChange(1, "ปฎิทินอาคารนนทบุรียิมเนเซียม", "#42a5f5")} className="btn mx-2 my-1" style={{ backgroundColor: '#42a5f5', color: 'white' }}>ปฎิทินอาคารนนทบุรียิมเนเซียม</a>
+            <a href="#" onClick={() => handleRoomChange(2, "ปฎิทินสนามกีฬาหญ้าเทียม", "#66bb6a")} className="btn mx-2 my-1" style={{ backgroundColor: '#66bb6a', color: 'white' }}>ปฎิทินสนามกีฬาหญ้าเทียม</a>
+            <a href="#" onClick={() => handleRoomChange(3, "ปฎิทินสระว่ายน้ำนนทบุรี", "#ff8c00")} className="btn mx-2 my-1" style={{ backgroundColor: '#ff8c00', color: 'white' }}>ปฎิทินสระว่ายน้ำนนทบุรี</a>
+            <a href="#" onClick={() => handleRoomChange(4, "ปฎิทินสนามฟุตบอลนนทบุรีสเตเดียม", "#ff5733")} className="btn mx-2 my-1" style={{ backgroundColor: '#ff5733', color: 'white' }}>ปฎิทินสนามฟุตบอลนนทบุรีสเตเดียม</a>
           </div>
 
           {/* ข้อความแสดงชื่อปฏิทินที่เลือก */}
@@ -668,26 +725,27 @@ function RoomAdmin() {
 
 
 
-
-        <div className="calendar-container">
+        <div className="calendar-container" style={{
+          border: `5px solid ${calendarBorderColor}`, // ✅ อัปเดตสีกรอบปฏิทิน
+          padding: "20px",
+          borderRadius: "20px"
+        }}>
           <Calendar
             localizer={localizer}
-            events={
-              currentRoom === 1 ? eventsRoom1 :
-                currentRoom === 2 ? eventsRoom2 :
-                  currentRoom === 3 ? eventsRoom3 :
-                    currentRoom === 4 ? eventsRoom4 :
-                      currentRoom === 5 ? eventsRoom5 :
-                        eventsRoom6
-            }
+            events={currentRoom === 1 ? eventsRoom1 :
+              currentRoom === 2 ? eventsRoom2 :
+                currentRoom === 3 ? eventsRoom3 :
+                  currentRoom === 4 ? eventsRoom4 :
+                    currentRoom === 5 ? eventsRoom5 :
+                      eventsRoom6}
             startAccessor="start"
             endAccessor="end"
-            style={{ height: window.innerWidth < 768 ? "350px" : "450px" }}
+            style={{ height: window.innerWidth < 768 ? "400px" : "450px" }}
             onSelectEvent={handleEventSelect}
-            eventPropGetter={eventStyleGetter} // ✅ เพิ่มฟังก์ชันกำหนดสีของ event
+            eventPropGetter={eventStyleGetter}
           />
-
         </div>
+
         <Modal show={showModal} onHide={handleClose} centered>
           <Modal.Header closeButton className="bg-primary text-white">
             <Modal.Title>รายละเอียดการจอง</Modal.Title>
@@ -714,16 +772,10 @@ function RoomAdmin() {
 
                 {/* ปุ่มอัปเดตสถานะ */}
                 <div className="text-center mt-3">
-                  <button
-                    className="btn btn-success mx-2"
-                    onClick={() => updateEventStatus(selectedEvent, "อนุมัติ")}
-                  >
+                  <button className="btn btn-success mx-2" onClick={() => updateEventStatus(selectedEvent, "อนุมัติ")}>
                     ✅ อนุมัติ
                   </button>
-                  <button
-                    className="btn btn-danger mx-2"
-                    onClick={() => updateEventStatus(selectedEvent, "ปฏิเสธ")}
-                  >
+                  <button className="btn btn-danger mx-2" onClick={() => updateEventStatus(selectedEvent, "ปฏิเสธ")}>
                     ❌ ปฏิเสธ
                   </button>
                 </div>
@@ -731,54 +783,16 @@ function RoomAdmin() {
             )}
           </Modal.Body>
           <Modal.Footer className="bg-light">
-            <Button onClick={handleClose} style={{ backgroundColor: 'red', color: 'white', borderRadius: '5px', padding: '8px 16px' }}>ปิด</Button>
+            <Button onClick={handleDeleteEvent} style={{ backgroundColor: '#d33', color: 'white', borderRadius: '5px', padding: '8px 16px' }}>
+              🗑️ ลบการจอง
+            </Button>
+            <Button onClick={handleClose} style={{ backgroundColor: '#6c757d', color: 'white', borderRadius: '5px', padding: '8px 16px' }}>
+              ปิด
+            </Button>
           </Modal.Footer>
         </Modal>
+        
 
-
-        {/* กราฟการใช้งานวัสดุอุปกรณ์ */}
-        <div className="row mb-4">
-          <div className="col-md-6">
-            <div className="card shadow-lg">
-              <div className="card-header text-center bg-success text-white rounded">การใช้วัสดุอุปกรณ์ (เปรียบเทียบระหว่างห้อง)</div>
-              <div className="card-body">
-                <Bar data={equipmentChartData} options={{ responsive: true }} />
-              </div>
-            </div>
-          </div>
-
-          {/* กราฟเวลาที่ได้รับความนิยม */}
-          <div className="col-md-6">
-            <div className="card shadow-lg">
-              <div className="card-header text-center rounded" style={{ backgroundColor: '#ff5733', color: 'white' }}>เวลาในการจองที่ได้รับความนิยมสูงสุด (เปรียบเทียบระหว่างห้อง)</div>
-              <div className="card-body">
-                <Bar data={popularTimesChartData} options={{ responsive: true }} />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* กราฟการจองในแต่ละวัน */}
-        <div className="row mb-4">
-          <div className="col-md-6">
-            <div className="card shadow-lg">
-              <div className="card-header text-center bg-primary text-white rounded">สรุปจำนวนการจองในแต่ละวัน (เปรียบเทียบระหว่างห้อง)</div>
-              <div className="card-body">
-                <Bar data={weekdayChartData} options={{ responsive: true }} />
-              </div>
-            </div>
-          </div>
-
-          {/* เปรียบเทียบการจองระหว่างห้อง */}
-          <div className="col-md-6">
-            <div className="card shadow-lg">
-              <div className="card-header text-center bg-warning text-dark rounded">เปรียบเทียบการจองระหว่างห้องประชุม</div>
-              <div className="card-body">
-                <Pie data={pieChartData} options={{ responsive: true }} style={{ maxHeight: '300px' }} />
-              </div>
-            </div>
-          </div>
-        </div>
         <div className="text-center mt-3">
           <button
             className="btn mx-2 w-100 my-2"
