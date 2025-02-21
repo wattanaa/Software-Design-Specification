@@ -10,8 +10,11 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link href="assets/icons/logobtm.png" rel="icon">
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css?family=Roboto:400,700%7cWork+Sans:400,600,700&display=swap">
+  <!-- <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Roboto:400,700%7cWork+Sans:400,600,700&display=swap"> -->
+    <link
+    href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
   <link rel="stylesheet" href="assets/css/libraries.css" />
   <link rel="stylesheet" href="assets/css/style.css" />
@@ -46,12 +49,25 @@
               <i class="bi bi-person"></i> <!-- ไอคอนโปรไฟล์ -->
             </button>
             <ul class="dropdown-menu profile-dropdown dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-              <li><a class="dropdown-item" href="http://localhost:3014">จัดการการจอง(Admin)</a></li>
               <li>
                 <hr class="dropdown-divider">
+              <li class="nav__item"><a href="./index.html" class="nav__item-link">หน้าแรก</a></li>
+              <!-- /.nav-item -->
+              <li class="nav__item"><a href="./tiker1.html" class="nav__item-link">อาคารนนทบุรียิมเนเซียม</a></li>
+              <!-- /.nav-item -->
+              <li class="nav__item"><a href="./tiker2.html" class="nav__item-link">สนามกีฬาหญ้าเทียม</a></li>
+              <!-- /.nav-item -->
+              <li class="nav__item"><a href="./tiker3.html" class="nav__item-link">สระว่ายน้ำนนทบุรี</a></li>
+              <!-- /.nav-item -->
+              <li class="nav__item"><a href="./tiker4.html" class="nav__item-link">สนามฟุตบอลนนทบุรีสเตเดียม</a></li>
+              <!-- /.nav-item -->
+              <li class="nav__item"><a target="_blank" href="http://localhost:3014"
+                  class="nav__item-link">จัดการการจอง(Admin)</a></li>
+              <!-- /.nav-item admin -->
               </li>
             </ul>
           </div>
+        </div>
 
       </nav><!-- /.navabr -->
     </header>
@@ -59,98 +75,103 @@
     <!-- ========================
       About 1
     =========================== -->
-
     <section>
       <div class="bbox container">
         <div class="row row-cols-1 row-cols-md-2 g-4">
           <div class="col-12 col-md-4">
             <div class="card">
               <div class="card-body">
-                <h5 class="card-title">🏟️ อาคารนนทบุรียิมเนเซียม</h5><br>
-                <h6 class="card-subtitle mb-2 text-muted">📍 รายละเอียดสถานที่</h6>
+                <p class="card-title" style="font-size: 24px; font-weight: bold;">🏟️ สนามกีฬาหญ้าเทียม พร้อมลู่ยางมาตรฐาน</p>
+                <hr> 
+                <p class="card-subtitle mb-2 text-muted" style="font-size: 18px; font-weight: bold;">📍 รายละเอียดสถานที่</p>
                 <p class="card-text">
-                  อาคารนนทบุรียิมเนเซียมเป็นศูนย์กีฬาภายในอาคารที่ได้มาตรฐาน ออกแบบมาเพื่อรองรับการแข่งขันกีฬาในร่ม 🏀🏸
-                  และกิจกรรมต่างๆ 🎭🎤 พร้อมอัฒจันทร์ที่สามารถรองรับผู้ชมได้ถึง <strong>4,000 ที่นั่ง</strong> 👥👥
+                  🏆 สนามกีฬาหญ้าเทียมแห่งนี้ได้รับการออกแบบอย่างพิถีพิถัน เหมาะสำหรับทั้ง <strong>การแข่งขัน</strong>
+                  และ <strong>การฝึกซ้อมกีฬา</strong>
+                  🌱 ใช้ <strong>หญ้าเทียมคุณภาพสูง</strong> ที่ให้สัมผัสใกล้เคียงกับหญ้าจริง ทนทานต่อการใช้งานหนัก
+                  และสามารถรองรับทุกสภาพอากาศ
                 </p>
 
-                <h6 class="card-subtitle mt-4 mb-2 text-muted">🏆 ความจุและสิ่งอำนวยความสะดวก</h6>
+                <p class="card-subtitle mt-4 mb-2 text-muted" style="font-size: 16px; font-weight: bold;">🏃 ลู่ยางมาตรฐานระดับสากล</p>
                 <ul class="card-text">
-                  <li>✅ <strong>อัฒจันทร์รองรับผู้ชม</strong> ได้มากถึง 4,000 ที่นั่ง</li>
-                  <li>❄️ <strong>ระบบปรับอากาศ</strong> ช่วยรักษาความเย็นสบาย</li>
-                  <li>💡 <strong>ระบบแสงสว่าง</strong> ที่เหมาะสมกับการแข่งขัน</li>
-                  <li>🏅 <strong>พื้นสนามมาตรฐาน</strong> รองรับกีฬาได้หลากหลาย เช่น
-                    <ul>
-                      <li>🏀 บาสเกตบอล</li>
-                      <li>🏐 วอลเลย์บอล</li>
-                      <li>🏸 แบดมินตัน</li>
-                      <li>⚽ ฟุตซอล</li>
-                    </ul>
+                  <li>✅ ช่วย <strong>เพิ่มประสิทธิภาพ</strong> ในการวิ่ง</li>
+                  <li>✅ ลด <strong>แรงกระแทก</strong> เพื่อป้องกันการบาดเจ็บ</li>
+                  <li>✅ ออกแบบ <strong>รองรับกีฬา</strong> หลากหลายประเภท</li>
+                </ul>
+
+                <p class="card-subtitle mt-4 mb-2 text-muted" style="font-size: 18px; font-weight: bold;">🎯 จุดเด่นของสนามกีฬาหญ้าเทียมแห่งนี้</p>
+                <ul class="card-text">
+                  <li>⚽ <strong>รองรับกีฬาหลายประเภท</strong> เช่น ฟุตบอล, ฟุตซอล, รักบี้, กรีฑา</li>
+                  <li>🏅 <strong>พื้นที่กว้างขวาง</strong> สามารถรองรับนักกีฬาได้จำนวนมาก</li>
+                  <li>🌦️ <strong>ทนต่อทุกสภาพอากาศ</strong> ไม่ต้องกังวลเรื่องฝนตกหรือแดดแรง</li>
+                  <li>🎭 <strong>รองรับกิจกรรมอเนกประสงค์</strong> เช่น งานอีเวนต์ การแข่งขันระดับท้องถิ่นและระดับชาติ
                   </li>
                 </ul>
 
-                <h6 class="card-subtitle mt-4 mb-2 text-muted">🎯 จุดเด่นและการใช้งาน</h6>
-                <ul class="card-text">
-                  <li>🏗️ โครงสร้างทันสมัย รองรับการใช้งานที่หลากหลาย</li>
-                  <li>🏟️ สถานที่อเนกประสงค์ เหมาะสำหรับ:
-                    <ul>
-                      <li>🏅 การแข่งขันกีฬาระดับ <strong>ประเทศ</strong> และ <strong>นานาชาติ</strong></li>
-                      <li>🎤 คอนเสิร์ตและการแสดงขนาดใหญ่</li>
-                      <li>🏛️ งานประชุมและอีเวนต์สำคัญ</li>
-                    </ul>
-                  </li>
-                </ul>
-
-                <h6 class="card-subtitle mt-4 mb-2 text-muted">📌 สรุปความสำคัญของอาคารนนทบุรียิมเนเซียม</h6>
+                <p class="card-subtitle mt-4 mb-2 text-muted" style="font-size: 18px; font-weight: bold;">📌 สรุปความสำคัญของสนามกีฬาแห่งนี้</p>
                 <p class="card-text">
-                  🌟 <strong>ศูนย์กลางของการกีฬาและความบันเทิงในภูมิภาค</strong><br>
-                  🎭 รองรับทั้งการแข่งขันระดับสูงและกิจกรรมบันเทิงต่าง ๆ<br>
-                  🎯 อาคารที่ทันสมัย ครบวงจร ตอบโจทย์ทุกความต้องการของกีฬาและอีเวนต์!
+                  🌟 เป็น <strong>ศูนย์กลางของการกีฬาและการออกกำลังกาย</strong> ในชุมชน<br>
+                  🥇 รองรับการแข่งขันระดับ <strong>ท้องถิ่น</strong> และ <strong>นานาชาติ</strong><br>
+                  🏆 ให้ประสบการณ์การเล่นกีฬาที่ <strong>ปลอดภัยและมีประสิทธิภาพสูงสุด</strong>
                 </p>
 
                 <p class="text-center mt-4">
-                  <strong>🏅 "นนทบุรียิมเนเซียม - ศูนย์รวมกีฬาและความบันเทิงระดับแนวหน้า" 🏅</strong>
+                  <strong>🏅 "สนามกีฬาหญ้าเทียม - พื้นที่สำหรับทุกคนที่รักกีฬาและสุขภาพ" 🏆✨</strong>
                 </p>
 
-                <div class="container d-flex justify-content-center" style="margin-top: 0px;">
-                  <button onclick="window.location.href='http://localhost:3010/#';" class="btn btn-primary btn-custom">สร้างคำจองสถานที่</button>
+
+                <!-- ปุ่มเปิด Popup -->
+                <div class="container d-flex justify-content-center mt-3">
+                  <button onclick="window.open('http://localhost:3011/#', '_blank')" class="btn btn-primary btn-lg">
+                    สร้างคำจองสถานที่
+                  </button>
                 </div>
+
               </div>
             </div>
           </div>
+
 
           <div class="col-12 col-md-8">
             <div id="carouselExampleControls" class="carousel1 slide carousel-fade" data-ride="carousel">
               <div class="carousel-inner">
                 <div class="carousel-item active">
-                  <img class="carousel-img" src="./assets/tk1/tk1.JPG" alt="First slide"
+                  <img class="carousel-img" src="./assets/tk2/tk1.JPG" alt="First slide"
                     style="height: 200px; object-fit: cover; width: 100%;">
                 </div>
                 <div class="carousel-item">
-                  <img class="carousel-img" src="./assets/tk1/tk2.JPG" alt="Second slide"
+                  <img class="carousel-img" src="./assets/tk2/tk2.JPG" alt="Second slide"
                     style="height: 200px; object-fit: cover; width: 100%;">
                 </div>
                 <div class="carousel-item">
-                  <img class="carousel-img" src="./assets/tk1/tk3.JPG" alt="Third slide"
+                  <img class="carousel-img" src="./assets/tk2/tk3.JPG" alt="Third slide"
                     style="height: 200px; object-fit: cover; width: 100%;">
                 </div>
                 <div class="carousel-item">
-                  <img class="carousel-img" src="./assets/tk1/tk4.JPG" alt="Third slide"
+                  <img class="carousel-img" src="./assets/tk2/tk4.JPG" alt="Third slide"
                     style="height: 200px; object-fit: cover; width: 100%;">
                 </div>
                 <div class="carousel-item">
-                  <img class="carousel-img" src="./assets/tk1/tk5.JPG" alt="Third slide"
+                  <img class="carousel-img" src="./assets/tk2/tk5.JPG" alt="Third slide"
+                    style="height: 200px; object-fit: cover; width: 100%;">
+                </div>
+                <div class="carousel-item">
+                  <img class="carousel-img" src="./assets/tk2/tk6.JPG" alt="Third slide"
+                    style="height: 200px; object-fit: cover; width: 100%;">
+                </div>
+                <div class="carousel-item">
+                  <img class="carousel-img" src="./assets/tk2/tk7.JPG" alt="Third slide"
                     style="height: 200px; object-fit: cover; width: 100%;">
                 </div>
               </div>
               <div class="container">
                 <br>
-                <h4
+                <p
                   style="font-size: 20px; background: linear-gradient(to right, #007bff, #0a6c87); padding: 10px 15px; display: inline-block; border-radius: 8px; color: white; font-weight: bold; text-align: center;">
-                  ปฏิทินการจองอาคารนนทบุรียิมเนเซียม
-                </h4>
+                  ปฏิทินการจองสนามกีฬาหญ้าเทียม พร้อมลู่ยางมาตรฐาน
+                </p>
                 <div class="calendar_wrapper">
                   <iframe
-                    src="https://calendar.google.com/calendar/embed?src=c_4fcb3687bff68bd0cc4b8f394d9ca95edfcbfc6808249100a2ed3ee913d5fa01%40group.calendar.google.com&ctz=Asia%2FBangkok"
+                    src="https://calendar.google.com/calendar/embed?src=c_6480839702a7d71cb1d46ea3875400d2d3614f59d7a41f176b14565afd2a5a19%40group.calendar.google.com&ctz=Asia%2FBangkok"
                     style="width: 100%; height: 500px; border: none;"></iframe>
                 </div>
               </div>
@@ -171,13 +192,14 @@
           <div class="row">
             <div class="col-sm-12 col-md-12 col-lg-3 footer__widget footer__widget-about">
               <div class="footer__widget-content">
-                <img src="assets/icons/logobtm.png" alt="logo" class="mb-30" style="width: 160px; height: 160px;">
+                <img src="assets/icons/logobtm.png" alt="logo" class="mb-30" style="width: 200px; height: 200px;">
               </div>
             </div><!-- /.col-lg-4 -->
             <div class="col-6 col-sm-6 col-md-3 col-lg-9 footer__widget footer__widget-nav">
-              <h2 class="">องค์การบริหารส่วน จังหวัดนนทบุรี <br>
-                <p style="font-size: medium;">Nonthaburi Provincial Administration Organization</p>
-              </h2>
+              <p class="" style="font-size: 34px; font-weight: bold; color: black;">องค์การบริหารส่วน จังหวัดนนทบุรี
+                <br>
+              <p style="font-size: medium;">Nonthaburi Provincial Administration Organization</p>
+              </p>
               <h6 class=""></h6>
               <div class="footer__widget-content">
                 <nav>

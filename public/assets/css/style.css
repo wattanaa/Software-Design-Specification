@@ -50,7 +50,7 @@
 
 body {
   background-color: #ffffff;
-  font-family: "Roboto", sans-serif;
+  font-family: "Prompt", serif;
   font-size: 15px;
   font-weight: 400;
   color: #9b9b9b;
@@ -169,7 +169,7 @@ select {
 }
 
 .font-secondary {
-  font-family: "Roboto", sans-serif;
+  font-family: "Prompt", serif;
 }
 
 .lh-1 {
@@ -1257,7 +1257,7 @@ h6 {
 }
 
 .pagetitle__subheading {
-  font-family: "Roboto", sans-serif;
+  font-family: "Prompt", serif;
   font-size: 17px;
   line-height: 1;
   color: #f9f9f9;
@@ -3441,7 +3441,7 @@ textarea.form-control {
 }
 
 .request-quote-tabs .request__form h6 {
-  font-family: "Roboto", sans-serif;
+  font-family: "Prompt", serif;
   font-size: 14px;
   line-height: 1;
   margin-bottom: 17px;
@@ -3648,7 +3648,7 @@ textarea.form-control {
 
 .slider .slide__subtitle {
   display: inline-block;
-  font-family: "Roboto", sans-serif;
+  font-family: "Prompt", serif;
   font-size: 17px;
   line-height: 1;
   color: #f9f9f9;
@@ -3656,6 +3656,7 @@ textarea.form-control {
 }
 
 .slider .slide__title {
+  font-family: "Prompt", serif;
   font-size: 50px;
   color: #ffffff;
   margin-bottom: 22px;
@@ -4315,7 +4316,7 @@ textarea.form-control {
 }
 
 .feature-item .feature__subtitle {
-  font-family: "Roboto", sans-serif;
+  font-family: "Prompt", serif;
   font-size: 14px;
   display: inline-block;
   margin-bottom: 6px;
@@ -4573,7 +4574,7 @@ textarea.form-control {
 
 .project-item .project__cat a {
   position: relative;
-  font-family: "Roboto", sans-serif;
+  font-family: "Prompt", serif;
   font-size: 13px;
   color: #7E51C8;
   padding-right: 7px;
@@ -5136,7 +5137,7 @@ textarea.form-control {
 }
 
 .member .member__info .member__desc {
-  font-family: "Roboto", sans-serif;
+  font-family: "Prompt", serif;
   font-size: 14px;
   margin-bottom: 0;
 }
@@ -5284,7 +5285,7 @@ textarea.form-control {
 }
 
 .testimonial__meta .testimonial__meta-desc {
-  font-family: "Roboto", sans-serif;
+  font-family: "Prompt", serif;
   line-height: 25px;
   font-weight: 400;
   font-size: 12px;
@@ -5413,7 +5414,7 @@ textarea.form-control {
 }
 
 .cta__desc {
-  font-family: "Roboto", sans-serif;
+  font-family: "Prompt", serif;
   font-size: 16px;
   color: #616161;
   line-height: 1;
@@ -5873,7 +5874,7 @@ textarea.form-control {
 }
 
 .blog-nav .blog__nav-content span {
-  font-family: "Roboto", sans-serif;
+  font-family: "Prompt", serif;
   font-size: 13px;
   color: #616161;
   display: block;
@@ -5973,7 +5974,7 @@ textarea.form-control {
 }
 
 .comments-list .comment__item .comment__content .comment__date {
-  font-family: "Roboto", sans-serif;
+  font-family: "Prompt", serif;
   color: #616161;
   font-size: 12px;
   line-height: 1;
@@ -6155,7 +6156,7 @@ textarea.form-control {
 }
 
 .contact-panel-2 .accordion-item .accordion__item-title {
-  font-family: "Roboto", sans-serif;
+  font-family: "Prompt", serif;
   font-size: 17px;
   font-weight: 700;
   line-height: 1;
@@ -6302,7 +6303,7 @@ textarea.form-control {
 }
 
 .pricing-item .pricing__title {
-  font-family: "Roboto", sans-serif;
+  font-family: "Prompt", serif;
   font-size: 18px;
   line-height: 1;
   margin-bottom: 4px;
@@ -7521,3 +7522,112 @@ textarea.form-control {
   background: #2ecc71;
   color: white;
 } */
+
+
+.prompt-thin {
+  font-family: "Prompt", serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.prompt-extralight {
+  font-family: "Prompt", serif;
+  font-weight: 200;
+  font-style: normal;
+}
+
+.prompt-light {
+  font-family: "Prompt", serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.prompt-regular {
+  font-family: "Prompt", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.prompt-medium {
+  font-family: "Prompt", serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.prompt-semibold {
+  font-family: "Prompt", serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.prompt-bold {
+  font-family: "Prompt", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.prompt-extrabold {
+  font-family: "Prompt", serif;
+  font-weight: 800;
+  font-style: normal;
+}
+
+.prompt-black {
+  font-family: "Prompt", serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.prompt-thin-italic {
+  font-family: "Prompt", serif;
+  font-weight: 100;
+  font-style: italic;
+}
+
+.prompt-extralight-italic {
+  font-family: "Prompt", serif;
+  font-weight: 200;
+  font-style: italic;
+}
+
+.prompt-light-italic {
+  font-family: "Prompt", serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.prompt-regular-italic {
+  font-family: "Prompt", serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.prompt-medium-italic {
+  font-family: "Prompt", serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.prompt-semibold-italic {
+  font-family: "Prompt", serif;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.prompt-bold-italic {
+  font-family: "Prompt", serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.prompt-extrabold-italic {
+  font-family: "Prompt", serif;
+  font-weight: 800;
+  font-style: italic;
+}
+
+.prompt-black-italic {
+  font-family: "Prompt", serif;
+  font-weight: 900;
+  font-style: italic;
+}
