@@ -265,5 +265,8 @@ select:focus {
   flex-direction: column;
   width: 48%;
 }
+body {
+  font-family: 'Prompt', sans-serif;
+}
 
 

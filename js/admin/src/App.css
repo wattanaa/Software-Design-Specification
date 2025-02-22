@@ -13,9 +13,12 @@ body {
   margin: 40px auto;
   padding: 35px;
   background: #fff;
-  border-radius: 15px;  /* เพิ่มความโค้งของกรอบ */
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* ปรับเงาให้มากขึ้น */
-  border: 1px solid #e0e0e0; /* เลือกกรอบสีที่อ่อนลง */
+  border-radius: 15px;
+  /* เพิ่มความโค้งของกรอบ */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  /* ปรับเงาให้มากขึ้น */
+  border: 1px solid #e0e0e0;
+  /* เลือกกรอบสีที่อ่อนลง */
   transition: box-shadow 0.3s ease;
 }
 
@@ -23,10 +26,13 @@ body {
 h2 {
   color: #2c3e50;
   text-align: center;
-  font-size: 32px; /* เพิ่มขนาดฟอนต์ */
+  font-size: 32px;
+  /* เพิ่มขนาดฟอนต์ */
   font-weight: bold;
-  letter-spacing: 1px;  /* เพิ่มการเว้นระยะระหว่างตัวอักษร */
-  margin-bottom: 25px; /* เพิ่มระยะห่างด้านล่าง */
+  letter-spacing: 1px;
+  /* เพิ่มการเว้นระยะระหว่างตัวอักษร */
+  margin-bottom: 25px;
+  /* เพิ่มระยะห่างด้านล่าง */
 }
 
 /* ส่วนของปฏิทิน */
@@ -42,7 +48,8 @@ h2 {
 label {
   display: block;
   margin-bottom: 8px;
-  font-weight: 600; /* ทำให้ตัวหนังสือเข้มขึ้น */
+  font-weight: 600;
+  /* ทำให้ตัวหนังสือเข้มขึ้น */
   color: #34495e;
 }
 
@@ -52,7 +59,8 @@ select {
   padding: 15px;
   border: 1px solid #ccc;
   border-radius: 10px;
-  background-color: #f9f9f9; /* พื้นหลังของ input */
+  background-color: #f9f9f9;
+  /* พื้นหลังของ input */
   font-size: 16px;
   color: #333;
   transition: border 0.3s ease;
@@ -61,7 +69,8 @@ select {
 input:focus,
 select:focus {
   border-color: #3498db;
-  box-shadow: 0 0 10px rgba(52, 152, 219, 0.3); /* เพิ่มเงาเมื่อ focus */
+  box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+  /* เพิ่มเงาเมื่อ focus */
   outline: none;
 }
 
@@ -76,7 +85,8 @@ select:focus {
 .btn {
   padding: 14px 25px;
   border: none;
-  border-radius: 50px;  /* ปรับให้ปุ่มมุมกลม */
+  border-radius: 50px;
+  /* ปรับให้ปุ่มมุมกลม */
   cursor: pointer;
   font-size: 16px;
   text-transform: uppercase;
@@ -91,8 +101,10 @@ select:focus {
 
 .create-btn:hover {
   background-color: #27ae60;
-  transform: translateY(-5px);  /* ปุ่มยกตัวเล็กน้อยเมื่อ hover */
-  box-shadow: 0 10px 30px rgba(46, 204, 113, 0.2); /* เงาที่ชัดเจนขึ้น */
+  transform: translateY(-5px);
+  /* ปุ่มยกตัวเล็กน้อยเมื่อ hover */
+  box-shadow: 0 10px 30px rgba(46, 204, 113, 0.2);
+  /* เงาที่ชัดเจนขึ้น */
 }
 
 .sign-out-btn {
@@ -125,17 +137,20 @@ select:focus {
 }
 
 .react-calendar:hover {
-  transform: scale(1.05);  /* ขยายเมื่อมีการวางเมาส์ */
+  transform: scale(1.05);
+  /* ขยายเมื่อมีการวางเมาส์ */
 }
 
 .react-calendar__tile {
-  font-size: 18px;  /* ปรับขนาดฟอนต์ในปฏิทินให้ดูชัด */
+  font-size: 18px;
+  /* ปรับขนาดฟอนต์ในปฏิทินให้ดูชัด */
 }
 
 .react-calendar__tile--active {
   background-color: #3498db;
   color: white;
-  border-radius: 10px;  /* ทำให้ปุ่มวันที่กลมขึ้น */
+  border-radius: 10px;
+  /* ทำให้ปุ่มวันที่กลมขึ้น */
 }
 
 /* การจัดการแจ้งเตือน */
@@ -148,14 +163,43 @@ select:focus {
   margin-bottom: 20px;
 }
 
+body {
+  font-family: 'Prompt', sans-serif;
+}
+
+body {
+  font-family: 'Prompt', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Prompt', sans-serif;
+  font-weight: 700; /* ตัวหนา */
+}
+
+button {
+  font-family: 'Prompt', sans-serif;
+  font-weight: 500;
+}
+
+table {
+  font-family: 'Prompt', sans-serif;
+}
+
 .App {
   position: relative;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden; /* ป้องกันการเกิด scroll */
+  overflow: hidden;
+  /* ป้องกันการเกิด scroll */
 }
+
+/* กำหนดให้ทุกข้อความใช้ฟอนต์ Prompt */
+* {
+  font-family: 'Prompt', sans-serif !important;
+}
+
 
 .App::before {
   content: "";
@@ -167,7 +211,7 @@ select:focus {
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  filter: blur(0.6px); 
+  filter: blur(0.6px);
   z-index: -1;
   animation: slideBackground 12s infinite alternate ease-in-out;
 }
@@ -177,12 +221,15 @@ select:focus {
   0% {
     background-image: url('./bg.jpg');
   }
+
   33% {
     background-image: url('./bg2.jpg');
   }
+
   66% {
     background-image: url('./bg3.jpg');
   }
+
   100% {
     background-image: url('./bg4.jpg');
   }
@@ -205,11 +252,12 @@ select:focus {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('./bg.jpg'); /* เปลี่ยนเป็นไฟล์รูปที่ต้องการ */
+  background-image: url('./bg.jpg');
+  /* เปลี่ยนเป็นไฟล์รูปที่ต้องการ */
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  filter: blur(0.6px); 
+  filter: blur(0.6px);
   z-index: -1;
 }
 
@@ -268,7 +316,7 @@ select:focus {
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  filter: blur(0.6px); 
+  filter: blur(0.6px);
   z-index: -1;
   animation: slideBackground 12s infinite alternate ease-in-out;
 }

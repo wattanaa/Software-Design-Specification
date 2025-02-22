@@ -267,3 +267,6 @@ select:focus {
 }
 
 
+body {
+  font-family: 'Prompt', sans-serif;
+}

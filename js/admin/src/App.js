@@ -683,9 +683,6 @@ function RoomAdmin() {
           )}
         </div>
 
-        
-
-
         <div className="calendar-container" style={{
           border: `5px solid ${calendarBorderColor}`, // ✅ อัปเดตสีกรอบปฏิทิน
           padding: "20px",

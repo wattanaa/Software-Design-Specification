@@ -19,6 +19,11 @@ body {
   transition: box-shadow 0.3s ease;
 }
 
+body {
+  font-family: 'Prompt', sans-serif;
+}
+
+
 /* สไตล์ของหัวข้อ */
 h2 {
   color: #2c3e50;
