@@ -39,10 +39,12 @@ function RoomAdmin() {
 
 
   const eventStyleGetter = (event) => {
-    let backgroundColor = "#FFFF00"; // ค่าเริ่มต้น (กรณีไม่มีสถานะ)
+    let backgroundColor = "#FFFF00"; // ค่าเริ่มต้น (รออนุมัติ - เหลือง)
 
     if (event.description?.includes("สถานะ: รออนุมัติ")) {
       backgroundColor = "#FFFF00"; // เหลือง
+    } else if (event.description?.includes("สถานะ: รอชำระเงิน")) {
+      backgroundColor = "#FFA500"; // ส้ม
     } else if (event.description?.includes("สถานะ: อนุมัติ")) {
       backgroundColor = "#00FF00"; // เขียว
     } else if (event.description?.includes("สถานะ: ปฏิเสธ")) {
@@ -283,7 +285,6 @@ function RoomAdmin() {
   }
 
 
-
   async function updateEventStatus(event, status) {
     if (!session) {
       Swal.fire("กรุณาเข้าสู่ระบบ", "คุณต้องเข้าสู่ระบบก่อนแก้ไขสถานะ", "warning");
@@ -295,7 +296,8 @@ function RoomAdmin() {
       return;
     }
 
-    const newDescription = `${event.description}\nสถานะ: ${status}`;
+    // ✅ ลบสถานะเก่าออก และเพิ่มสถานะใหม่เข้าไป
+    const newDescription = event.description.replace(/สถานะ: .*/, `สถานะ: ${status}`);
     const updatedEvent = {
       summary: event.title,
       description: newDescription,
@@ -323,22 +325,22 @@ function RoomAdmin() {
       // ✅ โหลดข้อมูลใหม่จากปฏิทินที่ถูกต้อง
       switch (event.calendarId) {
         case "c_4fcb3687bff68bd0cc4b8f394d9ca95edfcbfc6808249100a2ed3ee913d5fa01@group.calendar.google.com":
-          getCalendarEventsRoom1().then(fetchedEvents => setEventsRoom1(fetchedEvents));
+          getCalendarEventsRoom1().then(setEventsRoom1);
           break;
         case "c_6480839702a7d71cb1d46ea3875400d2d3614f59d7a41f176b14565afd2a5a19@group.calendar.google.com":
-          getCalendarEventsRoom2().then(fetchedEvents => setEventsRoom2(fetchedEvents));
+          getCalendarEventsRoom2().then(setEventsRoom2);
           break;
         case "c_0e791d7dc9bdbc53eb3c7c6a3e219f18ad7f559f0908b7a18ab7268650ce4b9c@group.calendar.google.com":
-          getCalendarEventsRoom3().then(fetchedEvents => setEventsRoom3(fetchedEvents));
+          getCalendarEventsRoom3().then(setEventsRoom3);
           break;
         case "c_b78034e303b1aeb8ffde10672ac719fb5eb18d2df788f26d58399812a6e51f5c@group.calendar.google.com":
-          getCalendarEventsRoom4().then(fetchedEvents => setEventsRoom4(fetchedEvents));
+          getCalendarEventsRoom4().then(setEventsRoom4);
           break;
         case "c_b6c44e704bb0a6238f77863629a3dabc0e748ee8af4cd1a3b438a0cbe740da8c@group.calendar.google.com":
-          getCalendarEventsRoom5().then(fetchedEvents => setEventsRoom5(fetchedEvents));
+          getCalendarEventsRoom5().then(setEventsRoom5);
           break;
         case "c_97923f05a9e6c79b7516856b54a834ae0ba29ea558d69a3cff389a6f2ff44252@group.calendar.google.com":
-          getCalendarEventsRoom6().then(fetchedEvents => setEventsRoom6(fetchedEvents));
+          getCalendarEventsRoom6().then(setEventsRoom6);
           break;
         default:
           console.warn("ไม่พบปฏิทินที่ตรงกัน");
@@ -349,6 +351,7 @@ function RoomAdmin() {
       Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถอัปเดตสถานะได้", "error");
     }
   }
+
 
 
   function findTopPopularTimes(events) {
@@ -680,49 +683,7 @@ function RoomAdmin() {
           )}
         </div>
 
-        {/* ป้ายสถานะการจอง */}
-        <div style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "15px",
-          marginBottom: "15px"
-        }}>
-          <div style={{
-            backgroundColor: "red",
-            color: "white",
-            padding: "5px 10px",
-            borderRadius: "5px",
-            fontSize: "15px",
-            textAlign: "center",
-            width: "150px"
-          }}>
-            การจองที่โดนปฎิเสธ
-          </div>
-          <div style={{
-            backgroundColor: "yellow",
-            color: "black",
-            padding: "5px 10px",
-            borderRadius: "5px",
-            fontSize: "15px",
-            textAlign: "center",
-            width: "150px"
-          }}>
-            การจองที่รออนุมัติ
-          </div>
-          <div style={{
-            backgroundColor: "green",
-            color: "white",
-            padding: "5px 10px",
-            borderRadius: "5px",
-            fontSize: "13px",
-            textAlign: "center",
-            width: "150px"
-          }}>
-            การจองที่ผ่านการอนุมัติ
-          </div>
-        </div>
-
+        
 
 
         <div className="calendar-container" style={{
@@ -746,10 +707,65 @@ function RoomAdmin() {
           />
         </div>
 
+        {/* 🔽 ย้ายสถานะการจองมาไว้ใต้ปฏิทิน 🔽 */}
+        <div style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "15px",
+          marginTop: "15px" // ✅ เพิ่มระยะห่างด้านบน
+        }}>
+          <div style={{
+            backgroundColor: "red",
+            color: "white",
+            padding: "5px 10px",
+            borderRadius: "5px",
+            fontSize: "15px",
+            textAlign: "center",
+            width: "160px"
+          }}>
+            การจองที่โดนปฎิเสธ
+          </div>
+          <div style={{
+            backgroundColor: "yellow",
+            color: "black",
+            padding: "5px 10px",
+            borderRadius: "5px",
+            fontSize: "15px",
+            textAlign: "center",
+            width: "160px"
+          }}>
+            การจองที่รออนุมัติ
+          </div>
+          <div style={{
+            backgroundColor: "orange",
+            color: "white",
+            padding: "5px 10px",
+            borderRadius: "5px",
+            fontSize: "15px",
+            textAlign: "center",
+            width: "160px"
+          }}>
+            การจองที่รอชำระเงิน
+          </div>
+          <div style={{
+            backgroundColor: "green",
+            color: "white",
+            padding: "5px 10px",
+            borderRadius: "5px",
+            fontSize: "14px",
+            textAlign: "center",
+            width: "160px"
+          }}>
+            การจองที่ผ่านการอนุมัติ
+          </div>
+        </div>
+
         <Modal show={showModal} onHide={handleClose} centered>
           <Modal.Header closeButton className="bg-primary text-white">
             <Modal.Title>รายละเอียดการจอง</Modal.Title>
           </Modal.Header>
+
           <Modal.Body>
             {selectedEvent && (
               <div className="container">
@@ -772,9 +788,16 @@ function RoomAdmin() {
 
                 {/* ปุ่มอัปเดตสถานะ */}
                 <div className="text-center mt-3">
-                  <button className="btn btn-success mx-2" onClick={() => updateEventStatus(selectedEvent, "อนุมัติ")}>
-                    ✅ อนุมัติ
-                  </button>
+                  {selectedEvent.description.includes("สถานะ: รออนุมัติ") && (
+                    <button className="btn btn-warning mx-2" onClick={() => updateEventStatus(selectedEvent, "รอชำระเงิน")}>
+                      ✅ อนุมัติ
+                    </button>
+                  )}
+                  {selectedEvent.description.includes("สถานะ: รอชำระเงิน") && (
+                    <button className="btn btn-success mx-2" onClick={() => updateEventStatus(selectedEvent, "อนุมัติ")}>
+                      💰 ชำระเงินแล้ว
+                    </button>
+                  )}
                   <button className="btn btn-danger mx-2" onClick={() => updateEventStatus(selectedEvent, "ปฏิเสธ")}>
                     ❌ ปฏิเสธ
                   </button>
@@ -782,6 +805,7 @@ function RoomAdmin() {
               </div>
             )}
           </Modal.Body>
+
           <Modal.Footer className="bg-light">
             <Button onClick={handleDeleteEvent} style={{ backgroundColor: '#d33', color: 'white', borderRadius: '5px', padding: '8px 16px' }}>
               🗑️ ลบการจอง
@@ -791,7 +815,7 @@ function RoomAdmin() {
             </Button>
           </Modal.Footer>
         </Modal>
-        
+
 
         <div className="text-center mt-3">
           <button

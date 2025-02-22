@@ -11,6 +11,130 @@ import Swal from "sweetalert2";
 const localizer = momentLocalizer(moment);
 
 function Room1() {
+
+
+  // ✅ แก้ไขข้อผิดพลาด React Hook "useState" is called conditionally
+  const [stadiumZone, setStadiumZone] = useState([]);
+  const [totalSeats, setTotalSeats] = useState('');
+
+
+  const [systems, setSystems] = useState({
+    ระบบไฟฟ้าส่องสว่าง: { เปิดใช้งาน: false, เวลาเริ่ม: '', เวลาสิ้นสุด: '', ระยะเวลา: '' },
+    ระบบเสียง: { เปิดใช้งาน: false, เวลาเริ่ม: '', เวลาสิ้นสุด: '', ระยะเวลา: '' },
+    ระบบจอภาพ5x10เมตร: { เปิดใช้งาน: false, เวลาเริ่ม: '', เวลาสิ้นสุด: '', ระยะเวลา: '' },
+    ระบบจอภาพ3x3เมตร: { เปิดใช้งาน: false, เวลาเริ่ม: '', เวลาสิ้นสุด: '', ระยะเวลา: '' },
+    ระบบเครื่องปรับอากาศ: { เปิดใช้งาน: false, เวลาเริ่ม: '', เวลาสิ้นสุด: '', ระยะเวลา: '' },
+    ลานอเนกประสงค์: { เปิดใช้งาน: false, เวลาเริ่ม: '', เวลาสิ้นสุด: '', ระยะเวลา: '' }
+  });
+
+  const [rooms, setRooms] = useState({
+    ห้องนักกีฬา1: '', ห้องนักกีฬา2: '', ห้องนักกีฬา3: '', ห้องนักกีฬา4: '',
+    ห้องกรรมการ: '', ห้องพยาบาล: '', ห้องรับรองVIP: '', ห้องควบคุมเสียง: '', ห้องขายบัตร: ''
+  });
+
+  // ✅ แก้ไข: คำนวณค่าหลังจากที่ useState ถูกกำหนดค่าแล้ว
+  const selectedSystems = Object.keys(systems)
+    .filter(key => systems[key]?.เปิดใช้งาน || systems[key]?.active) // ตรวจสอบทั้งสองเงื่อนไข
+    .map(key => key);
+
+
+  const selectedRooms = Object.keys(rooms)
+    .filter(key => rooms[key]);
+
+
+  // ✅ แยกฟังก์ชันจัดการการเปลี่ยนค่าออกจากเงื่อนไข
+  const toggleZone = (zone) => {
+    setStadiumZone(prev => prev.includes(zone) ? prev.filter(z => z !== zone) : [...prev, zone]);
+  };
+
+  const toggleSystem = (key) => {
+    setSystems(prev => ({
+      ...prev,
+      [key]: { ...prev[key], active: !prev[key].active }
+    }));
+  };
+
+  // ฟังก์ชันอัปเดตเวลาระบบ
+  const updateSystemTime = (key, field, value) => {
+    setSystems(prev => {
+      const updatedSystem = { ...prev[key], [field]: value };
+
+      return { ...prev, [key]: updatedSystem };
+    });
+  };
+
+  // ใช้ useEffect เพื่อคำนวณเวลาทุกครั้งที่มีการเปลี่ยนแปลง
+  useEffect(() => {
+    setSystems(prev => {
+      const updatedSystems = { ...prev };
+
+      Object.keys(updatedSystems).forEach(key => {
+        const system = updatedSystems[key];
+
+        if (system.เวลาเริ่ม && system.เวลาสิ้นสุด) {
+          const [startHour, startMinute] = system.เวลาเริ่ม.split(":").map(Number);
+          const [endHour, endMinute] = system.เวลาสิ้นสุด.split(":").map(Number);
+
+          let totalHours = endHour - startHour;
+          let totalMinutes = endMinute - startMinute;
+
+          if (totalMinutes < 0) {
+            totalHours -= 1;
+            totalMinutes += 60;
+          }
+
+          updatedSystems[key].ระยะเวลา = `${totalHours} ชั่วโมง ${totalMinutes} นาที`;
+        }
+      });
+
+      return updatedSystems;
+    });
+  }, [systems]); // ทำงานทุกครั้งที่ค่า systems เปลี่ยนแปลง
+
+
+  const updateRoomTime = (room, value) => {
+    setRooms(prev => ({ ...prev, [room]: value }));
+  };
+
+  const styles = {
+    card: {
+      backgroundColor: "#E3F2FD",
+      padding: "15px",
+      borderRadius: "10px",
+      textAlign: "left", // ✅ ทำให้ข้อความชิดซ้าย
+      boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)"
+    },
+    cardTitle: {
+      fontWeight: "bold",
+      fontSize: "16px",
+      display: "block",
+      marginBottom: "10px"
+    },
+    cardContent: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "8px",
+      alignItems: "flex-start" // ✅ ทำให้ checkbox/radio อยู่ชิดซ้าย
+    },
+    checkboxLabel: {
+      display: "flex",
+      alignItems: "center",
+      gap: "10px",
+      whiteSpace: "nowrap",
+      justifyContent: "flex-start", // ✅ ทำให้ checkbox อยู่ชิดซ้าย
+      textAlign: "left"
+    },
+    radioLabel: {
+      display: "flex",
+      alignItems: "center",
+      gap: "10px",
+      whiteSpace: "nowrap",
+      justifyContent: "flex-start", // ✅ ทำให้ radio อยู่ชิดซ้าย
+      textAlign: "left"
+    }
+  };
+
+
   const [eventDescription, setEventDescription] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [startHour, setStartHour] = useState(8);
@@ -19,6 +143,28 @@ function Room1() {
   const [email, setEmail] = useState(""); // Email ของผู้จอง
   const [organization, setOrganization] = useState(""); // องค์กร/สำนักงาน
   const [purpose, setPurpose] = useState(""); // วัตถุประสงค์ของการใช้
+
+  // ⬇️ เปลี่ยนจาก state เดิมที่เป็น String ให้เป็น Array ⬇️
+  const [stadiumZones, setStadiumZones] = useState([]); // เลือกโซนสนาม
+
+  // ⬇️ ฟังก์ชันอัปเดตค่าเมื่อเลือก Checkbox ⬇️
+  const toggleStadiumZone = (zone) => {
+    setStadiumZones((prev) =>
+      prev.includes(zone) ? prev.filter((z) => z !== zone) : [...prev, zone]
+    );
+  };
+
+  const [lighting, setLighting] = useState(false); // ระบบไฟฟ้า
+  const [soundSystem, setSoundSystem] = useState(false); // ระบบเสียง
+  const [internet, setInternet] = useState(false); // ระบบอินเทอร์เน็ต
+
+  const [athleteRoom, setAthleteRoom] = useState(false); // ห้องพักนักกีฬา
+  const [medicalRoom, setMedicalRoom] = useState(false); // ห้องพยาบาล
+  const [vipRoom, setVipRoom] = useState(false); // ห้อง VIP
+  const [pressRoom, setPressRoom] = useState(false); // ห้องแถลงข่าว
+
+  const [cleaningOption, setCleaningOption] = useState(""); // การทำความสะอาด
+
 
   const [additionalItems, setAdditionalItems] = useState({
     projector: 0,
@@ -32,6 +178,17 @@ function Room1() {
   const session = useSession();
   const supabase = useSupabaseClient();
   const { isLoading } = useSessionContext();
+
+  useEffect(() => {
+    console.log("ค่า systems อัปเดตล่าสุด: ", systems);
+  }, [systems]);
+
+  console.log("ค่าที่ส่งไปบันทึก:", {
+    stadiumZone,
+    selectedSystems,
+    selectedRooms
+  });
+
 
   useEffect(() => {
     if (session) {
@@ -76,14 +233,13 @@ function Room1() {
 
     const data = await response.json();
     return data.items.map(event => {
-      let status = "รอชำระเงิน"; // ✅ ค่าเริ่มต้น (Default)
+      let status = "รออนุมัติ"; // ค่าเริ่มต้น
+      const desc = event.description?.trim() || "";
+      console.log("🔍 ตรวจสอบรายละเอียด:", desc); // ✅ Debug ตรวจสอบค่าจริง
 
-      // ✅ ตรวจสอบว่า "description" มีค่าหรือไม่ (ป้องกัน Error)
-      const desc = event.description?.trim() || ""; // ✅ ใช้ `trim()` เพื่อลบช่องว่าง
-      const statusMatch = desc.match(/สถานะ:\s*(อนุมัติ|ปฏิเสธ)/);
-
+      const statusMatch = desc.match(/สถานะ:\s*(อนุมัติ|ปฏิเสธ|รอชำระเงิน)/);
       if (statusMatch) {
-        status = statusMatch[1]; // ✅ ดึงค่าที่ตรงกับ "อนุมัติ" หรือ "ปฏิเสธ"
+        status = statusMatch[1];
       }
 
       return {
@@ -190,8 +346,9 @@ function Room1() {
   const eventPropGetter = (event) => {
     let backgroundColor = "#42a5f5"; // สีเริ่มต้น (ฟ้า)
 
-    // ✅ กำหนดสีตาม "สถานะ"
     if (event.status === "รอชำระเงิน") {
+      backgroundColor = "#FFA500"; // สีส้ม ✅
+    } else if (event.status === "รออนุมัติ") {
       backgroundColor = "#FFFF00"; // สีเหลือง
     } else if (event.status === "อนุมัติ") {
       backgroundColor = "#00FF00"; // สีเขียว
@@ -204,7 +361,7 @@ function Room1() {
         backgroundColor,
         borderRadius: '5px',
         opacity: 0.8,
-        color: 'black', // ใช้สีดำแทนขาวเพื่อให้อ่านง่ายขึ้นในบางสี
+        color: 'black',
         border: '0px',
         display: 'block',
       },
@@ -237,6 +394,57 @@ function Room1() {
       return;
     }
 
+    // ✅ ตรวจสอบอีเมล
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!email.trim() || !emailPattern.test(email)) {
+      Swal.fire({
+        icon: "warning",
+        title: "รูปแบบอีเมลไม่ถูกต้อง",
+        text: "กรุณากรอกอีเมลที่ถูกต้อง เช่น example@gmail.com",
+        confirmButtonText: "ตกลง",
+        confirmButtonColor: "#ffc107"
+      });
+      return;
+    }
+
+    if (!organization.trim()) {
+      Swal.fire({
+        icon: "warning",
+        title: "กรุณากรอกชื่อองค์กร",
+        text: "กรุณาใส่ชื่อองค์กร/สำนักงานของคุณก่อนทำการจอง",
+        confirmButtonText: "ตกลง",
+        confirmButtonColor: "#ffc107"
+      });
+      return;
+    }
+
+    if (stadiumZone.length === 0) {
+      console.log("ตรวจสอบค่าที่เลือก:", stadiumZone); // Debug ดูค่า
+      Swal.fire({
+        icon: "warning",
+        title: "กรุณาเลือกโซนสนาม",
+        text: "ต้องเลือกโซนสนามก่อนจอง",
+        confirmButtonText: "ตกลง",
+        confirmButtonColor: "#ffc107"
+      });
+      return;
+    }
+
+
+    if (startHour >= endHour) {
+      Swal.fire({
+        icon: "error",
+        title: "เวลาจองไม่ถูกต้อง",
+        text: "เวลาเริ่มต้นต้องน้อยกว่าเวลาสิ้นสุด",
+        confirmButtonText: "ตกลง",
+        confirmButtonColor: "#d33"
+      });
+      return;
+    }
+
+
+
+
     //-----------------------------------//
 
     const newStart = new Date(selectedDate);
@@ -264,14 +472,24 @@ function Room1() {
     }
 
     const event = {
+
       summary: "จองอาคารนนทบุรียิมเนเซียม",
-      description: `📌 **รายละเอียดการจอง**
-    - ชื่อผู้จอง: ${eventName}
-    - เบอร์โทรศัพท์: ${phone}
-    - Email ของผู้จอง: ${email}
-    - องค์กร/สำนักงาน: ${organization}
-    - วัตถุประสงค์ของการใช้: ${purpose}
-    - **สถานะ: รอชำระเงิน**`,
+      description: `📌 **รายละเอียดการจอง**  
+👤 ชื่อผู้จอง: ${eventName}  
+📞 เบอร์โทรศัพท์: ${phone}  
+📧 Email: ${email}  
+🏢 องค์กร: ${organization}  
+🎯 วัตถุประสงค์: ${purpose}  
+
+⚽ **สนามแข่งขัน:** ${stadiumZone.length > 0 ? stadiumZone.join(", ") : "ไม่ได้เลือก"}  
+
+🔌 **ระบบที่ต้องใช้:** ${selectedSystems.length > 0 ? selectedSystems.join(", ") : "ไม่ได้เลือก"}  
+
+🏢 **ห้องที่ใช้:** ${selectedRooms.length > 0 ? selectedRooms.join(", ") : "ไม่ได้เลือก"}  
+
+🧹 **การทำความสะอาด:** ${cleaningOption}  
+
+✅ **สถานะ: รออนุมัติ**`,
 
       start: {
         dateTime: newStart.toISOString(), // ใช้ ISOString เพื่อให้แน่ใจว่าเป็นรูปแบบ UTC
@@ -311,8 +529,6 @@ function Room1() {
             setEvents(fetchedEvents);
           });
 
-          // รีเซ็ตค่าฟอร์มให้เป็นค่าเริ่มต้น
-          // รีเซ็ตค่าฟอร์มให้เป็นค่าเริ่มต้น
           setEventName("");
           setPhone("");
           setEmail("");
@@ -322,11 +538,15 @@ function Room1() {
           setSelectedDate(new Date());
           setStartHour(8);
           setEndHour(9);
-          setAdditionalItems({
-            projector: 0,
-            laserPointer: 0,
-            microphone: 0
-          });
+          setStadiumZones([]); // ล้างค่าที่เลือก
+          setLighting(false);
+          setSoundSystem(false);
+          setInternet(false);
+          setAthleteRoom(false);
+          setMedicalRoom(false);
+          setVipRoom(false);
+          setPressRoom(false);
+          setCleaningOption("");
         });
       })
 
@@ -394,7 +614,7 @@ function Room1() {
                   borderRadius: "5px",
                   fontSize: "15px",
                   textAlign: "center",
-                  width: "150px"
+                  width: "160px"
                 }}>
                   การจองที่โดนปฎิเสธ
                 </div>
@@ -405,18 +625,29 @@ function Room1() {
                   borderRadius: "5px",
                   fontSize: "15px",
                   textAlign: "center",
-                  width: "150px"
+                  width: "160px"
                 }}>
                   การจองที่รออนุมัติ
                 </div>
                 <div style={{
-                  backgroundColor: "green",
+                  backgroundColor: "orange",
                   color: "white",
-                  padding: "5px 13px",
+                  padding: "5px 10px",
                   borderRadius: "5px",
                   fontSize: "15px",
                   textAlign: "center",
-                  width: "150px"
+                  width: "160px"
+                }}>
+                  การจองที่รอชำระเงิน
+                </div>
+                <div style={{
+                  backgroundColor: "green",
+                  color: "white",
+                  padding: "5px 10px",
+                  borderRadius: "5px",
+                  fontSize: "15px",
+                  textAlign: "center",
+                  width: "160px"
                 }}>
                   การจองที่ผ่านการอนุมัติ
                 </div>
@@ -451,7 +682,7 @@ function Room1() {
 
             <hr />
             <div style={formContainer}>
-              <h3 style={headerStyle}>📅 แบบฟอร์มจองอาคารนนทบุรียิมเนเซียม</h3>
+              <h3 style={headerStyle}>📅 แบบฟอร์มอาคารนนทบุรียิมเนเซียม</h3>
 
               <div style={formGroup}>
                 <label style={labelStyle}>👤 ชื่อผู้จอง:</label>
@@ -496,26 +727,124 @@ function Room1() {
                 </div>
               </div>
 
-              <div style={timeSelectContainer}>
-                <div style={timeSelectGroup}>
-                  <label style={labelStyle}>⏰ เวลาเริ่มจอง:</label>
-                  <select value={startHour} onChange={e => setStartHour(parseInt(e.target.value))} style={inputStyle}>
+              <div style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "15px",
+                backgroundColor: "#F9F9F9",
+                padding: "15px",
+                borderRadius: "10px"
+              }}>
+                {/* ⏳ เวลาเริ่ม & ⌛ เวลาสิ้นสุด */}
+                <div style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "15px",
+                  justifyContent: "center"
+                }}>
+                  <label>⏳ เวลาเริ่ม:</label>
+                  <select value={startHour} onChange={e => setStartHour(parseInt(e.target.value))}
+                    style={{ padding: "8px", borderRadius: "6px", border: "1px solid #ccc" }}>
                     {[...Array(11)].map((_, index) => (
                       <option key={index} value={index + 8}>{index + 8}:00</option>
                     ))}
                   </select>
-                </div>
 
-                <div style={timeSelectGroup}>
-                  <label style={labelStyle}>⏳ เวลาสิ้นสุดจอง:</label>
-                  <select value={endHour} onChange={e => setEndHour(parseInt(e.target.value))} style={inputStyle}>
+                  <label>⌛ เวลาสิ้นสุด:</label>
+                  <select value={endHour} onChange={e => setEndHour(parseInt(e.target.value))}
+                    style={{ padding: "8px", borderRadius: "6px", border: "1px solid #ccc" }}>
                     {[...Array(11)].map((_, index) => (
                       <option key={index} value={index + 9}>{index + 9}:00</option>
                     ))}
                   </select>
                 </div>
+
+
+
+                <div style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "20px",
+                  padding: "20px",
+                  backgroundColor: "#F9F9F9",
+                  borderRadius: "10px"
+                }}>
+
+
+                  {/* สนามแข่งขัน */}
+                  <div style={styles.card}>
+                    <h3>🏟️ สนามแข่งขัน</h3>
+                    <div style={styles.cardContent}>
+                      <label style={styles.checkboxLabel}>
+                        <input type="checkbox" checked={stadiumZone.includes("สนามแข่งขัน")} onChange={() => toggleZone("สนามแข่งขัน")} />
+                        สนามแข่งขัน
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* อัฒจันทร์ */}
+                  <div style={styles.card}>
+                    <h3>🏟️ อัฒจันทร์</h3>
+                    <div style={styles.cardContent}>
+                      {["โซน A ฝั่งประธาน", "โซน B ฝั่งตรงข้ามประธาน", "โซน C ฝั่งบริเวณเวที", "โซน D ฝั่งตรงข้ามเวที"].map(zone => (
+                        <label key={zone} style={styles.checkboxLabel}>
+                          <input type="checkbox" checked={stadiumZone.includes(zone)} onChange={() => toggleZone(zone)} />
+                          {zone}
+                        </label>
+                      ))}
+
+                    </div>
+                  </div>
+
+                  {/* ระบบต่างๆ */}
+                  <div style={styles.card}>
+                    <h3>🔧 ระบบที่ต้องใช้</h3>
+                    <div style={styles.cardContent}>
+                      {Object.keys(systems).map(key => (
+                        <div key={key}>
+                          <label style={styles.checkboxLabel}>
+                            <input type="checkbox" checked={systems[key].active} onChange={() => toggleSystem(key)} />
+                            {key.replace(/([A-Z])/g, ' $1')}
+                          </label>
+                          {systems[key].active && (
+                            <div style={{ marginLeft: "20px", marginTop: "5px" }}>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* ห้องกิจกรรม */}
+                  <div style={styles.card}>
+                    <h3>🏢 ห้องกิจกรรม</h3>
+                    <div style={styles.cardContent}>
+                      {Object.keys(rooms).map(roomKey => (
+                        <div key={roomKey}>
+                          <label style={styles.checkboxLabel}>
+                            <input type="checkbox" checked={!!rooms[roomKey]} onChange={e => updateRoomTime(roomKey, e.target.checked ? "1" : "")} />
+                            {roomKey.replace(/([A-Z])/g, ' $1')}
+                          </label>
+                          {rooms[roomKey] && (
+                            <div style={{ marginLeft: "20px", marginTop: "5px" }}>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                </div>
               </div>
             </div>
+
+
+
+
+
+
+
 
             <hr />
             <div className="button-group">
@@ -619,9 +948,10 @@ function Room1() {
 
           </>
 
-        )}
-      </div>
-    </div>
+        )
+        }
+      </div >
+    </div >
   );
 }
 

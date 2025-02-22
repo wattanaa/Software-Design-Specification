@@ -11,6 +11,46 @@ import Swal from "sweetalert2";
 const localizer = momentLocalizer(moment);
 
 function Room1() {
+
+  const styles = {
+    card: {
+      backgroundColor: "#E3F2FD",
+      padding: "15px",
+      borderRadius: "10px",
+      textAlign: "left", // ✅ ทำให้ข้อความชิดซ้าย
+      boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)"
+    },
+    cardTitle: {
+      fontWeight: "bold",
+      fontSize: "16px",
+      display: "block",
+      marginBottom: "10px"
+    },
+    cardContent: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "8px",
+      alignItems: "flex-start" // ✅ ทำให้ checkbox/radio อยู่ชิดซ้าย
+    },
+    checkboxLabel: {
+      display: "flex",
+      alignItems: "center",
+      gap: "10px",
+      whiteSpace: "nowrap",
+      justifyContent: "flex-start", // ✅ ทำให้ checkbox อยู่ชิดซ้าย
+      textAlign: "left"
+    },
+    radioLabel: {
+      display: "flex",
+      alignItems: "center",
+      gap: "10px",
+      whiteSpace: "nowrap",
+      justifyContent: "flex-start", // ✅ ทำให้ radio อยู่ชิดซ้าย
+      textAlign: "left"
+    }
+  };
+
+
   const [eventDescription, setEventDescription] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [startHour, setStartHour] = useState(8);
@@ -20,7 +60,16 @@ function Room1() {
   const [organization, setOrganization] = useState(""); // องค์กร/สำนักงาน
   const [purpose, setPurpose] = useState(""); // วัตถุประสงค์ของการใช้
 
-  const [stadiumZone, setStadiumZone] = useState(""); // เลือกโซนสนาม
+  // ⬇️ เปลี่ยนจาก state เดิมที่เป็น String ให้เป็น Array ⬇️
+  const [stadiumZones, setStadiumZones] = useState([]); // เลือกโซนสนาม
+
+  // ⬇️ ฟังก์ชันอัปเดตค่าเมื่อเลือก Checkbox ⬇️
+  const toggleStadiumZone = (zone) => {
+    setStadiumZones((prev) =>
+      prev.includes(zone) ? prev.filter((z) => z !== zone) : [...prev, zone]
+    );
+  };
+
   const [lighting, setLighting] = useState(false); // ระบบไฟฟ้า
   const [soundSystem, setSoundSystem] = useState(false); // ระบบเสียง
   const [internet, setInternet] = useState(false); // ระบบอินเทอร์เน็ต
@@ -89,7 +138,7 @@ function Room1() {
 
     const data = await response.json();
     return data.items.map(event => {
-      let status = "รอชำระเงิน"; // ✅ ค่าเริ่มต้น (Default)
+      let status = "รออนุมัติ"; // ✅ ค่าเริ่มต้น (Default)
 
       // ✅ ตรวจสอบว่า "description" มีค่าหรือไม่ (ป้องกัน Error)
       const desc = event.description?.trim() || ""; // ✅ ใช้ `trim()` เพื่อลบช่องว่าง
@@ -205,6 +254,8 @@ function Room1() {
 
     // ✅ กำหนดสีตาม "สถานะ"
     if (event.status === "รอชำระเงิน") {
+      backgroundColor = "#FFA500"; // สีส้ม
+    } else if (event.status === "รออนุมัติ") {
       backgroundColor = "#FFFF00"; // สีเหลือง
     } else if (event.status === "อนุมัติ") {
       backgroundColor = "#00FF00"; // สีเขียว
@@ -274,7 +325,7 @@ function Room1() {
       return;
     }
 
-    if (!stadiumZone) {
+    if (stadiumZones.length === 0) { // ✅ ใช้ .length แทนการเช็คค่า String
       Swal.fire({
         icon: "warning",
         title: "กรุณาเลือกโซนสนาม",
@@ -284,6 +335,7 @@ function Room1() {
       });
       return;
     }
+
 
     if (startHour >= endHour) {
       Swal.fire({
@@ -338,30 +390,30 @@ function Room1() {
     const event = {
       summary: "จองสนามฟุตบอลนนทบุรีสเตเดียม",
       description: `📌 **รายละเอียดการจอง**  
-  👤 ชื่อผู้จอง: ${eventName}  
-  📞 เบอร์โทรศัพท์: ${phone}  
-  📧 Email: ${email}  
-  🏢 องค์กร: ${organization}  
-  🎯 วัตถุประสงค์: ${purpose}  
-  
-  ⚽ **สนามแข่งขัน:** ${stadiumZone}  
-  
-  🔌 **ระบบที่ต้องใช้:** ${[
+    👤 ชื่อผู้จอง: ${eventName}  
+    📞 เบอร์โทรศัพท์: ${phone}  
+    📧 Email: ${email}  
+    🏢 องค์กร: ${organization}  
+    🎯 วัตถุประสงค์: ${purpose}  
+    
+    ⚽ **สนามแข่งขัน:** ${stadiumZones.length > 0 ? stadiumZones.join(", ") : "ไม่ได้เลือก"}  
+    
+    🔌 **ระบบที่ต้องใช้:** ${[
           lighting ? "ไฟฟ้า" : "",
           soundSystem ? "เสียง" : "",
           internet ? "อินเทอร์เน็ต" : ""
         ].filter(Boolean).join(", ")}
-  
-  🏢 **ห้องที่ใช้:** ${[
+    
+    🏢 **ห้องที่ใช้:** ${[
           athleteRoom ? "ห้องพักนักกีฬา" : "",
           medicalRoom ? "ห้องพยาบาล" : "",
           vipRoom ? "ห้อง VIP" : "",
           pressRoom ? "ห้องแถลงข่าว" : ""
         ].filter(Boolean).join(", ")}
-  
-  🧹 **การทำความสะอาด:** ${cleaningOption}  
-  
-  ✅ **สถานะ: รอชำระเงิน**`,
+    
+    🧹 **การทำความสะอาด:** ${cleaningOption}  
+    
+    ✅ **สถานะ: รออนุมัติ**`,
 
       start: {
         dateTime: newStart.toISOString(), // ใช้ ISOString เพื่อให้แน่ใจว่าเป็นรูปแบบ UTC
@@ -410,7 +462,7 @@ function Room1() {
           setSelectedDate(new Date());
           setStartHour(8);
           setEndHour(9);
-          setStadiumZone("");
+          setStadiumZones([]); // ล้างค่าที่เลือก
           setLighting(false);
           setSoundSystem(false);
           setInternet(false);
@@ -486,7 +538,7 @@ function Room1() {
                   borderRadius: "5px",
                   fontSize: "15px",
                   textAlign: "center",
-                  width: "150px"
+                  width: "160px"
                 }}>
                   การจองที่โดนปฎิเสธ
                 </div>
@@ -497,18 +549,29 @@ function Room1() {
                   borderRadius: "5px",
                   fontSize: "15px",
                   textAlign: "center",
-                  width: "150px"
+                  width: "160px"
                 }}>
                   การจองที่รออนุมัติ
                 </div>
                 <div style={{
-                  backgroundColor: "green",
+                  backgroundColor: "orange",
                   color: "white",
-                  padding: "5px 13px",
+                  padding: "5px 10px",
                   borderRadius: "5px",
                   fontSize: "15px",
                   textAlign: "center",
-                  width: "150px"
+                  width: "160px"
+                }}>
+                  การจองที่รอชำระเงิน
+                </div>
+                <div style={{
+                  backgroundColor: "green",
+                  color: "white",
+                  padding: "5px 10px",
+                  borderRadius: "5px",
+                  fontSize: "15px",
+                  textAlign: "center",
+                  width: "160px"
                 }}>
                   การจองที่ผ่านการอนุมัติ
                 </div>
@@ -543,7 +606,7 @@ function Room1() {
 
             <hr />
             <div style={formContainer}>
-              <h3 style={headerStyle}>📅 แบบฟอร์มอาคารนนทบุรียิมเนเซียม</h3>
+              <h3 style={headerStyle}>📅 แบบฟอร์มจองสนามฟุตบอลนนทบุรีสเตเดียม</h3>
 
               <div style={formGroup}>
                 <label style={labelStyle}>👤 ชื่อผู้จอง:</label>
@@ -621,175 +684,97 @@ function Room1() {
                   </select>
                 </div>
 
-                {/* ⚽ สนามแข่งขัน */}
-                <div style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
-                  justifyContent: "center"
-                }}>
-                  <label>⚽ สนามแข่งขัน:</label>
-                  <select value={stadiumZone} onChange={e => setStadiumZone(e.target.value)}
-                    style={{ padding: "8px", borderRadius: "6px", border: "1px solid #ccc" }}>
-                    <option value="">เลือกโซน</option>
-                    <option value="โซน A (ม่วง+VIP)">โซน A ด้านหลังฝั่งประธาน (ม่วง)+VIP</option>
-                    <option value="โซน B (เขียว)">โซน B ด้านมีหลังคา (เขียว)</option>
-                    <option value="โซน C1,C2 (ส้ม)">โซน C1,C2 ฝั่งประธาน (ส้ม)</option>
-                    <option value="โซน C3,C4 (ส้ม)">โซน C3,C4 (ส้ม)</option>
-                    <option value="โซน D1 (เหลือง)">โซน D1 ด้านคนพลัง (เหลือง)</option>
-                    <option value="โซน D2 (เหลือง)">โซน D2 ด้านสกรอบออร์ต (เหลือง)</option>
-                  </select>
-                </div>
-                {/* กล่องหลัก (แบ่งเป็น 3 คอลัมน์) */}
+
+
                 <div style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 1fr 1fr",
+                  gridTemplateColumns: "1fr 1fr",
                   gap: "20px",
                   padding: "20px",
                   backgroundColor: "#F9F9F9",
                   borderRadius: "10px"
                 }}>
-                  <div style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: "20px",
-                    justifyContent: "flex-start"
-                  }}>
 
-                    {/* 🔧 ระบบที่ต้องใช้ */}
-                    <div style={{
-                      backgroundColor: "#E3F2FD", // สีฟ้าอ่อน
-                      padding: "15px",
-                      borderRadius: "8px",
-                      minWidth: "280px",
-                      textAlign: "left"
-                    }}>
-                      <label style={{
-                        fontWeight: "bold",
-                        fontSize: "16px",
-                        display: "block",
-                        marginBottom: "10px"
-                      }}>
-                        🔧 ระบบที่ต้องใช้:
-                      </label>
-                      <div style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-start", // ✅ ชิดซ้าย
-                        gap: "8px"
-                      }}>
-                        <label style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "flex-start",
-                          gap: "10px",
-                          whiteSpace: "nowrap" // ✅ ทำให้ข้อความอยู่บรรทัดเดียว
-                        }}>
-                          <input type="checkbox" checked={lighting} onChange={() => setLighting(!lighting)} />
-                          ไฟฟ้าส่องสว่าง
+                  {/* ⚽ สนามแข่งขัน */}
+                  <div style={styles.card}>
+                    <label style={styles.cardTitle}>⚽ สนามแข่งขัน:</label>
+                    <div style={styles.cardContent}>
+                      {[
+                      "โซน A ด้านมีหลังคาฝั่งประธาน(ม่วง)+VIP(แดง) 1,400 ที่นั่ง",
+                        "โซน B ด้านมีหลังคา(เขียว) 1,577 ที่นั่ง",
+                        "โซน C1,C2 ฝั่งประธาน (ส้ม) 1,108 ที่นั่ง",
+                        "โซน C3,C4 (ส้ม) 1,092 ที่นั่ง",
+                        "โซน D1 ด้านคบเพลิง (เหลือง) 2,342 ที่นั่ง",
+                        "โซน D2 ด้านสกรอบอร์ด (เหลือง) 2,481 ที่นั่ง"
+                      ].map((zone) => (
+                        <label key={zone} style={styles.checkboxLabel}>
+                          <input type="checkbox" checked={stadiumZones.includes(zone)} onChange={() => toggleStadiumZone(zone)} />
+                          {zone}
                         </label>
-                        <label style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "flex-start",
-                          gap: "10px",
-                          whiteSpace: "nowrap"
-                        }}>
-                          <input type="checkbox" checked={soundSystem} onChange={() => setSoundSystem(!soundSystem)} />
-                          ระบบเสียง
-                        </label>
-                        <label style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "flex-start",
-                          gap: "10px",
-                          whiteSpace: "nowrap"
-                        }}>
-                          <input type="checkbox" checked={internet} onChange={() => setInternet(!internet)} />
-                          อินเทอร์เน็ต
-                        </label>
-                      </div>
+                      ))}
                     </div>
-
-                    {/* 🏢 ห้องกิจกรรมที่ต้องใช้ */}
-                    <div style={{
-                      backgroundColor: "#E8F5E9", // สีเขียวอ่อน
-                      padding: "15px",
-                      borderRadius: "8px",
-                      minWidth: "280px",
-                      textAlign: "left"
-                    }}>
-                      <label style={{
-                        fontWeight: "bold",
-                        fontSize: "16px",
-                        display: "block",
-                        marginBottom: "10px"
-                      }}>
-                        🏢 ห้องที่ต้องใช้:
-                      </label>
-                      <div style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                        gap: "8px"
-                      }}>
-                        <label style={{ display: "flex", alignItems: "center", gap: "10px", whiteSpace: "nowrap" }}>
-                          <input type="checkbox" checked={athleteRoom} onChange={() => setAthleteRoom(!athleteRoom)} />
-                          ห้องพักนักกีฬา
-                        </label>
-                        <label style={{ display: "flex", alignItems: "center", gap: "10px", whiteSpace: "nowrap" }}>
-                          <input type="checkbox" checked={medicalRoom} onChange={() => setMedicalRoom(!medicalRoom)} />
-                          ห้องพยาบาล
-                        </label>
-                        <label style={{ display: "flex", alignItems: "center", gap: "10px", whiteSpace: "nowrap" }}>
-                          <input type="checkbox" checked={vipRoom} onChange={() => setVipRoom(!vipRoom)} />
-                          ห้อง VIP
-                        </label>
-                        <label style={{ display: "flex", alignItems: "center", gap: "10px", whiteSpace: "nowrap" }}>
-                          <input type="checkbox" checked={pressRoom} onChange={() => setPressRoom(!pressRoom)} />
-                          ห้องแถลงข่าว
-                        </label>
-                      </div>
-                    </div>
-
-                    {/* 🧹 การทำความสะอาด */}
-                    <div style={{
-                      backgroundColor: "#FFF3E0", // สีส้มอ่อน
-                      padding: "15px",
-                      borderRadius: "8px",
-                      minWidth: "280px",
-                      textAlign: "left"
-                    }}>
-                      <label style={{
-                        fontWeight: "bold",
-                        fontSize: "16px",
-                        display: "block",
-                        marginBottom: "10px"
-                      }}>
-                        🧹 การทำความสะอาด:
-                      </label>
-                      <div style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                        gap: "8px"
-                      }}>
-                        <label style={{ display: "flex", alignItems: "center", gap: "10px", whiteSpace: "nowrap" }}>
-                          <input type="radio" name="cleaning" value="ผู้ใช้รับผิดชอบ" onChange={() => setCleaningOption("ผู้ใช้รับผิดชอบ")} />
-                          ให้ผู้ใช้ทำความสะอาด
-                        </label>
-                        <label style={{ display: "flex", alignItems: "center", gap: "10px", whiteSpace: "nowrap" }}>
-                          <input type="radio" name="cleaning" value="สถานที่เป็นผู้ดำเนินการ" onChange={() => setCleaningOption("สถานที่เป็นผู้ดำเนินการ")} />
-                          ให้สถานที่ดำเนินการ
-                        </label>
-                      </div>
-                    </div>
-
                   </div>
+
+                  {/* 🔧 ระบบที่ต้องใช้ */}
+                  <div style={styles.card}>
+                    <label style={styles.cardTitle}>🔧 ระบบที่ต้องใช้:</label>
+                    <div style={styles.cardContent}>
+                      {[
+                        { name: "ไฟฟ้าส่องสว่าง", state: lighting, setter: setLighting },
+                        { name: "ระบบเสียง", state: soundSystem, setter: setSoundSystem },
+                        { name: "อินเทอร์เน็ต", state: internet, setter: setInternet }
+                      ].map((item, index) => (
+                        <label key={index} style={styles.checkboxLabel}>
+                          <input type="checkbox" checked={item.state} onChange={() => item.setter(!item.state)} />
+                          {item.name}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 🏢 ห้องที่ต้องใช้ */}
+                  <div style={styles.card}>
+                    <label style={styles.cardTitle}>🏢 ห้องที่ต้องใช้:</label>
+                    <div style={styles.cardContent}>
+                      {[
+                        { name: "ห้องพักนักกีฬา", state: athleteRoom, setter: setAthleteRoom },
+                        { name: "ห้องพยาบาล", state: medicalRoom, setter: setMedicalRoom },
+                        { name: "ห้อง VIP", state: vipRoom, setter: setVipRoom },
+                        { name: "ห้องแถลงข่าว", state: pressRoom, setter: setPressRoom }
+                      ].map((item, index) => (
+                        <label key={index} style={styles.checkboxLabel}>
+                          <input type="checkbox" checked={item.state} onChange={() => item.setter(!item.state)} />
+                          {item.name}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 🧹 การทำความสะอาด */}
+                  <div style={styles.card}>
+                    <label style={styles.cardTitle}>🧹 การทำความสะอาด:</label>
+                    <div style={styles.cardContent}>
+                      {[
+                        { label: "ให้ผู้ใช้ทำความสะอาด", value: "ผู้ใช้รับผิดชอบ" },
+                        { label: "ให้สถานที่ดำเนินการ", value: "สถานที่เป็นผู้ดำเนินการ" }
+                      ].map((option, index) => (
+                        <label key={index} style={styles.radioLabel}>
+                          <input type="radio" name="cleaning" value={option.value} onChange={() => setCleaningOption(option.value)} />
+                          {option.label}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
                 </div>
 
               </div>
+
             </div>
+
+
+
+
 
 
 
@@ -897,8 +882,9 @@ function Room1() {
 
           </>
 
-        )}
-      </div>
+        )
+        }
+      </div >
     </div >
   );
 }
