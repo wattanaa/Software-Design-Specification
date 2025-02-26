@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบอัปโหลดหลักฐานการโอน</title>
+    <link href="assets/icons/logobtm.png" rel="icon">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- ✅ SweetAlert2 -->
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Prompt", sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1976d2, #42a5f5);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 450px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .container:hover {
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            width: 100px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #1565c0;
+        }
+
+        input,
+        button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input {
+            background: #f9f9f9;
+        }
+
+        input:focus {
+            border-color: #1976d2;
+            box-shadow: 0 0 5px rgba(25, 118, 210, 0.3);
+        }
+
+        button {
+            background: #1976d2;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background: #1565c0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        button:disabled {
+            background: gray;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #uploadStatus {
+            margin-top: 15px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        a {
+            color: #1976d2;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 100%;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <img class="logo" src="./assets/icons/logobtm1.png" alt="Logo">
+        <h1>📤 ระบบอัปโหลดหลักฐานการโอน</h1>
+
+        <input type="text" id="name" placeholder="ชื่อ-นามสกุล ผู้จอง" required>
+        <input type="text" id="phone" placeholder="เบอร์โทร" required maxlength="10">
+        <input type="file" id="fileInput" accept="image/*">
+
+        <button id="uploadBtn" onclick="uploadToDrive()">📤 อัปโหลด</button>
+
+        <div id="uploadStatus"></div>
+    </div>
+
+    <script>
+        function validateInput(name, phone) {
+            const namePattern = /^[\u0E00-\u0E7Fa-zA-Z\s]{3,}$/; // ชื่อภาษาไทยหรืออังกฤษ 3 ตัวอักษรขึ้นไป
+            const phonePattern = /^[0-9]{10}$/; // เบอร์โทร 10 หลัก
+
+            if (!namePattern.test(name)) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "⚠️ ข้อมูลไม่ถูกต้อง",
+                    text: "กรุณากรอกชื่อ-นามสกุลให้ถูกต้อง (ไม่น้อยกว่า 3 ตัวอักษร)",
+                    confirmButtonColor: "#1565c0"
+                });
+                return false;
+            }
+
+            if (!phonePattern.test(phone)) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "⚠️ เบอร์โทรไม่ถูกต้อง",
+                    text: "กรุณากรอกเบอร์โทรให้ถูกต้อง (10 หลัก)",
+                    confirmButtonColor: "#1565c0"
+                });
+                return false;
+            }
+
+            return true;
+        }
+
+        async function uploadToDrive() {
+            let fileInput = document.getElementById("fileInput");
+            let name = document.getElementById("name").value.trim();
+            let phone = document.getElementById("phone").value.trim();
+
+            if (!fileInput.files.length || !name || !phone) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "⚠️ กรอกข้อมูลให้ครบถ้วน!",
+                    text: "กรุณากรอกชื่อ-นามสกุล เบอร์โทร และเลือกไฟล์ที่ต้องการอัปโหลด",
+                    confirmButtonColor: "#1565c0"
+                });
+                return;
+            }
+
+            if (!validateInput(name, phone)) return;
+
+            let file = fileInput.files[0];
+
+            let fileExtension = file.name.split('.').pop();
+            let fileName = `${name}_${phone}.${fileExtension}`;
+
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async function () {
+                let base64Data = reader.result.split(",")[1];
+
+                let payload = {
+                    file: base64Data,
+                    fileName: fileName,
+                    mimeType: file.type
+                };
+
+                Swal.fire({
+                    title: "⏳ กำลังอัปโหลด...",
+                    text: "กรุณารอสักครู่",
+                    icon: "info",
+                    showConfirmButton: false,
+                    allowOutsideClick: false
+                });
+
+                let response = await fetch("https://script.google.com/macros/s/AKfycbz_FwgBJTZUaVeqGZbajyXd-Atc0NEjxuoFZdPsCZRn7N0r3ZE9KF-bxp5mwcNV5Ofq/exec", {
+                    method: "POST",
+                    body: new URLSearchParams(payload),
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" }
+                });
+
+                let result = await response.json();
+
+                if (result.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "✅ อัปโหลดสำเร็จ!",
+                        html: `📂 <a href="${result.fileUrl}" target="_blank">เปิดไฟล์ใน Google Drive</a><br>⏳ หน้าจะรีเฟรชใน 3 วินาที`,
+                        confirmButtonColor: "#1565c0",
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didClose: () => {
+                            location.reload(); // 🔄 รีเฟรชหน้าเว็บ
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "❌ อัปโหลดล้มเหลว!",
+                        text: result.error,
+                        confirmButtonColor: "#1565c0"
+                    });
+                }
+            };
+        }
+    </script>
+
+</body>
+
+</html>
