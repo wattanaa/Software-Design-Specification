@@ -138,23 +138,23 @@ function Room1() {
 
     const data = await response.json();
     return data.items.map(event => {
-      let status = "รออนุมัติ"; // ✅ ค่าเริ่มต้น (Default)
+      let status = "รออนุมัติ"; // ค่าเริ่มต้น
 
-      // ✅ ตรวจสอบว่า "description" มีค่าหรือไม่ (ป้องกัน Error)
-      const desc = event.description?.trim() || ""; // ✅ ใช้ `trim()` เพื่อลบช่องว่าง
-      const statusMatch = desc.match(/สถานะ:\s*(อนุมัติ|ปฏิเสธ)/);
+      // ตรวจสอบสถานะจากคำอธิบาย
+      const desc = event.description?.trim() || "";
+      const statusMatch = desc.match(/สถานะ:\s*(อนุมัติ|ปฏิเสธ|รออนุมัติ|รอชำระเงิน)/);
 
       if (statusMatch) {
-        status = statusMatch[1]; // ✅ ดึงค่าที่ตรงกับ "อนุมัติ" หรือ "ปฏิเสธ"
+        status = statusMatch[1]; // ดึงค่าจากสถานะที่มี
       }
 
       return {
-        id: event.id, // ✅ เก็บ ID ของ event เพื่อใช้แก้ไขภายหลัง
-        title: event.summary || "ไม่ระบุหัวข้อ", // ✅ ป้องกัน null title
+        id: event.id,
+        title: event.summary || "ไม่ระบุหัวข้อ",
         start: new Date(event.start.dateTime || event.start.date),
         end: new Date(event.end.dateTime || event.end.date),
-        description: desc || "ไม่มีรายละเอียด", // ✅ ป้องกัน null description
-        status, // ✅ ใส่สถานะของแต่ละ event
+        description: desc || "ไม่มีรายละเอียด",
+        status, // ใส่สถานะของแต่ละ event
       };
     });
   }
@@ -252,11 +252,11 @@ function Room1() {
   const eventPropGetter = (event) => {
     let backgroundColor = "#42a5f5"; // สีเริ่มต้น (ฟ้า)
 
-    // ✅ กำหนดสีตาม "สถานะ"
-    if (event.status === "รอชำระเงิน") {
-      backgroundColor = "#FFA500"; // สีส้ม
-    } else if (event.status === "รออนุมัติ") {
+    // กำหนดสีตามสถานะของแต่ละ event
+    if (event.status === "รออนุมัติ") {
       backgroundColor = "#FFFF00"; // สีเหลือง
+    } else if (event.status === "รอชำระเงิน") {
+      backgroundColor = "#FFA500"; // สีส้ม
     } else if (event.status === "อนุมัติ") {
       backgroundColor = "#00FF00"; // สีเขียว
     } else if (event.status === "ปฏิเสธ") {
@@ -274,7 +274,6 @@ function Room1() {
       },
     };
   };
-
 
   async function createCalendarEvent() {
     //-----------------------------------//
@@ -655,33 +654,34 @@ function Room1() {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                gap: "15px",
-                backgroundColor: "#F9F9F9",
-                padding: "15px",
-                borderRadius: "10px"
+                width: "100%",
+                marginTop: "10px"
               }}>
-                {/* ⏳ เวลาเริ่ม & ⌛ เวลาสิ้นสุด */}
+                {/* 🕒 ส่วนเวลา */}
                 <div style={{
                   display: "flex",
-                  alignItems: "center",
-                  gap: "15px",
-                  justifyContent: "center"
+                  justifyContent: "center",
+                  gap: "20px",
+                  width: "100%",
+                  marginBottom: "20px"
                 }}>
-                  <label>⏳ เวลาเริ่ม:</label>
-                  <select value={startHour} onChange={e => setStartHour(parseInt(e.target.value))}
-                    style={{ padding: "8px", borderRadius: "6px", border: "1px solid #ccc" }}>
-                    {[...Array(11)].map((_, index) => (
-                      <option key={index} value={index + 8}>{index + 8}:00</option>
-                    ))}
-                  </select>
+                  <div>
+                    <label style={{ fontWeight: "bold" }}>⏰ เวลาเริ่มจอง:</label>
+                    <select value={startHour} onChange={e => setStartHour(parseInt(e.target.value))} style={inputStyle}>
+                      {[...Array(11)].map((_, index) => (
+                        <option key={index} value={index + 8}>{index + 8}:00</option>
+                      ))}
+                    </select>
+                  </div>
 
-                  <label>⌛ เวลาสิ้นสุด:</label>
-                  <select value={endHour} onChange={e => setEndHour(parseInt(e.target.value))}
-                    style={{ padding: "8px", borderRadius: "6px", border: "1px solid #ccc" }}>
-                    {[...Array(11)].map((_, index) => (
-                      <option key={index} value={index + 9}>{index + 9}:00</option>
-                    ))}
-                  </select>
+                  <div>
+                    <label style={{ fontWeight: "bold" }}>⌛ เวลาสิ้นสุดจอง:</label>
+                    <select value={endHour} onChange={e => setEndHour(parseInt(e.target.value))} style={inputStyle}>
+                      {[...Array(11)].map((_, index) => (
+                        <option key={index} value={index + 9}>{index + 9}:00</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
 
@@ -700,7 +700,7 @@ function Room1() {
                     <label style={styles.cardTitle}>⚽ สนามแข่งขัน:</label>
                     <div style={styles.cardContent}>
                       {[
-                      "โซน A ด้านมีหลังคาฝั่งประธาน(ม่วง)+VIP(แดง) 1,400 ที่นั่ง",
+                        "โซน A ด้านมีหลังคาฝั่งประธาน(ม่วง)+VIP(แดง) 1,400 ที่นั่ง",
                         "โซน B ด้านมีหลังคา(เขียว) 1,577 ที่นั่ง",
                         "โซน C1,C2 ฝั่งประธาน (ส้ม) 1,108 ที่นั่ง",
                         "โซน C3,C4 (ส้ม) 1,092 ที่นั่ง",

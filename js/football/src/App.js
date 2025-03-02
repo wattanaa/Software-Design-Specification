@@ -11,6 +11,21 @@ import Swal from "sweetalert2";
 const localizer = momentLocalizer(moment);
 
 function Room1() {
+
+  const [facilities, setFacilities] = useState({
+    footballField: false,  // สนามฟุตบอล (หญ้าจริงชนิด Fiber Tube)
+    runningTrack: false,   // ลู่-ลานกรีฑา (ยางสังเคราะห์)
+  });
+
+  // 🔧 ฟังก์ชัน Toggle Checkbox
+  const toggleFacility = (facility) => {
+    setFacilities(prev => ({
+      ...prev,
+      [facility]: !prev[facility]  // สลับค่า true/false
+    }));
+  };
+
+
   const [eventDescription, setEventDescription] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [startHour, setStartHour] = useState(8);
@@ -44,6 +59,36 @@ function Room1() {
   if (isLoading) {
     return <></>;
   }
+
+  async function updateEventStatus(event, status) {
+    const updatedEvent = {
+      ...event,
+      description: event.description.replace(/สถานะ: .*/, `สถานะ: ${status}`),
+    };
+
+    try {
+      const response = await fetch(
+        `https://www.googleapis.com/calendar/v3/calendars/${event.calendarId}/events/${event.id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: 'Bearer ' + session.provider_token,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedEvent),
+        }
+      );
+
+      if (!response.ok) throw new Error("อัปเดตสถานะไม่สำเร็จ");
+
+      Swal.fire("อัปเดตสำเร็จ!", `สถานะถูกเปลี่ยนเป็น "${status}"`, "success");
+      getCalendarEvents().then(fetchedEvents => setEvents(fetchedEvents)); // โหลดข้อมูลใหม่
+    } catch (error) {
+      console.error("เกิดข้อผิดพลาด:", error);
+      Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถอัปเดตสถานะได้", "error");
+    }
+  }
+
 
   async function googleSignIn() {
     const { error } = await supabase.auth.signInWithOAuth({
@@ -80,11 +125,12 @@ function Room1() {
 
       // ✅ ตรวจสอบว่า "description" มีค่าหรือไม่ (ป้องกัน Error)
       const desc = event.description?.trim() || ""; // ✅ ใช้ `trim()` เพื่อลบช่องว่าง
-      const statusMatch = desc.match(/สถานะ:\s*(อนุมัติ|ปฏิเสธ)/);
+      const statusMatch = desc.match(/สถานะ:\s*(รออนุมัติ|รอชำระเงิน|อนุมัติ|ปฏิเสธ)/);
 
       if (statusMatch) {
-        status = statusMatch[1]; // ✅ ดึงค่าที่ตรงกับ "อนุมัติ" หรือ "ปฏิเสธ"
+        status = statusMatch[1]; // ดึงค่าจากสถานะที่มี
       }
+
 
       return {
         id: event.id, // ✅ เก็บ ID ของ event เพื่อใช้แก้ไขภายหลัง
@@ -190,9 +236,11 @@ function Room1() {
   const eventPropGetter = (event) => {
     let backgroundColor = "#42a5f5"; // สีเริ่มต้น (ฟ้า)
 
-    // ✅ กำหนดสีตาม "สถานะ"
-    if (event.status === "รอชำระเงิน") {
+    // กำหนดสีตามสถานะ
+    if (event.status === "รออนุมัติ") {
       backgroundColor = "#FFFF00"; // สีเหลือง
+    } else if (event.status === "รอชำระเงิน") {
+      backgroundColor = "#FFA500"; // สีส้ม
     } else if (event.status === "อนุมัติ") {
       backgroundColor = "#00FF00"; // สีเขียว
     } else if (event.status === "ปฏิเสธ") {
@@ -204,13 +252,12 @@ function Room1() {
         backgroundColor,
         borderRadius: '5px',
         opacity: 0.8,
-        color: 'black', // ใช้สีดำแทนขาวเพื่อให้อ่านง่ายขึ้นในบางสี
+        color: 'black', // ใช้สีดำแทนขาวเพื่อให้อ่านง่ายขึ้น
         border: '0px',
         display: 'block',
       },
     };
   };
-
 
   async function createCalendarEvent() {
     //-----------------------------------//
@@ -263,15 +310,34 @@ function Room1() {
       return;
     }
 
+    // ✅ ตรวจสอบว่าสนามไหนถูกเลือก
+    let selectedFacilities = [];
+    if (facilities.footballField) selectedFacilities.push("⚽ สนามฟุตบอล (หญ้าจริงชนิด Fiber Tube)");
+    if (facilities.runningTrack) selectedFacilities.push("🏃‍♂️ ลู่-ลานกรีฑา (ยางสังเคราะห์)");
+
+    // ✅ แปลงรายการสนามเป็นข้อความ
+    let facilitiesText = selectedFacilities.length > 0 ? selectedFacilities.join("\n    - ") : "❌ ไม่มีสนามที่เลือก";
+
+
+    setFacilities({
+      footballField: false,
+      runningTrack: false
+    });
+
+
+
+    // ✅ **สร้าง Event ที่จะส่งไป Google Calendar**
     const event = {
       summary: "จองสนามกีฬาหญ้าเทียม พร้อมลู่ยางมาตรฐาน(ฟุตบอล)",
       description: `📌 **รายละเอียดการจอง**
-    - ชื่อผู้จอง: ${eventName}
-    - เบอร์โทรศัพท์: ${phone}
-    - Email ของผู้จอง: ${email}
-    - องค์กร/สำนักงาน: ${organization}
-    - วัตถุประสงค์ของการใช้: ${purpose}
-    - **สถานะ: รอชำระเงิน**`,
+      - 👤 ชื่อผู้จอง: ${eventName}
+      - 📞 เบอร์โทรศัพท์: ${phone}
+      - 📧 Email ของผู้จอง: ${email}
+      - 🏢 องค์กร/สำนักงาน: ${organization}
+      - 🎯 วัตถุประสงค์ของการใช้: ${purpose}
+      - **สนามที่เลือก:**
+      - ${facilitiesText}
+      - ✅ **สถานะ: รออนุมัติ**`,
 
       start: {
         dateTime: newStart.toISOString(), // ใช้ ISOString เพื่อให้แน่ใจว่าเป็นรูปแบบ UTC
@@ -283,6 +349,12 @@ function Room1() {
       }
     };
 
+
+    // ✅ รีเซ็ตค่าฟอร์มหลังการจอง
+    setFacilities({
+      footballField: false,
+      runningTrack: false
+    });
     await fetch("https://www.googleapis.com/calendar/v3/calendars/c_6480839702a7d71cb1d46ea3875400d2d3614f59d7a41f176b14565afd2a5a19@group.calendar.google.com/events", {
       method: "POST",
       headers: {
@@ -394,7 +466,7 @@ function Room1() {
                   borderRadius: "5px",
                   fontSize: "15px",
                   textAlign: "center",
-                  width: "150px"
+                  width: "160px"
                 }}>
                   การจองที่โดนปฎิเสธ
                 </div>
@@ -405,18 +477,29 @@ function Room1() {
                   borderRadius: "5px",
                   fontSize: "15px",
                   textAlign: "center",
-                  width: "150px"
+                  width: "160px"
                 }}>
                   การจองที่รออนุมัติ
                 </div>
                 <div style={{
-                  backgroundColor: "green",
+                  backgroundColor: "orange",
                   color: "white",
-                  padding: "5px 13px",
+                  padding: "5px 10px",
                   borderRadius: "5px",
                   fontSize: "15px",
                   textAlign: "center",
-                  width: "150px"
+                  width: "160px"
+                }}>
+                  การจองที่รอชำระเงิน
+                </div>
+                <div style={{
+                  backgroundColor: "green",
+                  color: "white",
+                  padding: "5px 10px",
+                  borderRadius: "5px",
+                  fontSize: "15px",
+                  textAlign: "center",
+                  width: "160px"
                 }}>
                   การจองที่ผ่านการอนุมัติ
                 </div>
@@ -496,26 +579,89 @@ function Room1() {
                 </div>
               </div>
 
-              <div style={timeSelectContainer}>
-                <div style={timeSelectGroup}>
-                  <label style={labelStyle}>⏰ เวลาเริ่มจอง:</label>
-                  <select value={startHour} onChange={e => setStartHour(parseInt(e.target.value))} style={inputStyle}>
-                    {[...Array(11)].map((_, index) => (
-                      <option key={index} value={index + 8}>{index + 8}:00</option>
-                    ))}
-                  </select>
+              <div style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                width: "100%",
+                marginTop: "10px"
+              }}>
+                {/* 🕒 ส่วนเวลา */}
+                <div style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "20px",
+                  width: "100%",
+                  marginBottom: "20px"
+                }}>
+                  <div>
+                    <label style={{ fontWeight: "bold" }}>⏰ เวลาเริ่มจอง:</label>
+                    <select value={startHour} onChange={e => setStartHour(parseInt(e.target.value))} style={inputStyle}>
+                      {[...Array(11)].map((_, index) => (
+                        <option key={index} value={index + 8}>{index + 8}:00</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label style={{ fontWeight: "bold" }}>⌛ เวลาสิ้นสุดจอง:</label>
+                    <select value={endHour} onChange={e => setEndHour(parseInt(e.target.value))} style={inputStyle}>
+                      {[...Array(11)].map((_, index) => (
+                        <option key={index} value={index + 9}>{index + 9}:00</option>
+                      ))}
+                    </select>
+                  </div>
+
                 </div>
 
-                <div style={timeSelectGroup}>
-                  <label style={labelStyle}>⏳ เวลาสิ้นสุดจอง:</label>
-                  <select value={endHour} onChange={e => setEndHour(parseInt(e.target.value))} style={inputStyle}>
-                    {[...Array(11)].map((_, index) => (
-                      <option key={index} value={index + 9}>{index + 9}:00</option>
-                    ))}
-                  </select>
+                {/* 🔧 ขอใช้สิ่งอำนวยความสะดวก */}
+                <div style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  backgroundColor: "#f9f9f9",
+                  padding: "15px",
+                  borderRadius: "8px",
+                  width: "100%",
+                  maxWidth: "400px",
+                  boxShadow: "0px 4px 6px rgba(0,0,0,0.1)"
+                }}>
+                  <h3 style={{
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    textAlign: "left",
+                    marginBottom: "10px"
+                  }}>
+                    ⚽ สนามแข่งขัน
+                  </h3>
+
+                  <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px"
+                  }}>
+                    {/* ✅ ปรับ checkbox ให้อยู่ชิดซ้ายเท่ากัน */}
+                    <label style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "flex-start" }}>
+                      <input type="checkbox" checked={facilities.footballField} onChange={() => toggleFacility("footballField")} />
+                      <span style={{ minWidth: "120px" }}>สนามฟุตบอล </span>
+                      <span style={{ minWidth: "120px" }}>(หญ้าจริงชนิด Fiber Tube)</span>
+                    </label>
+
+                    <label style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "flex-start" }}>
+                      <input type="checkbox" checked={facilities.runningTrack} onChange={() => toggleFacility("runningTrack")} />
+                      <span style={{ minWidth: "120px" }}> ลู่-ลานกรีฑา</span>
+                      <span style={{ minWidth: "120px" }}> (ยางสังเคราะห์)</span>
+                    </label>
+
+
+                  </div>
                 </div>
+
               </div>
             </div>
+
+
+
 
             <hr />
             <div className="button-group">

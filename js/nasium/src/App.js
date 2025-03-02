@@ -731,33 +731,34 @@ function Room1() {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                gap: "15px",
-                backgroundColor: "#F9F9F9",
-                padding: "15px",
-                borderRadius: "10px"
+                width: "100%",
+                marginTop: "10px"
               }}>
-                {/* ⏳ เวลาเริ่ม & ⌛ เวลาสิ้นสุด */}
+                {/* 🕒 ส่วนเวลา */}
                 <div style={{
                   display: "flex",
-                  alignItems: "center",
-                  gap: "15px",
-                  justifyContent: "center"
+                  justifyContent: "center",
+                  gap: "20px",
+                  width: "100%",
+                  marginBottom: "20px"
                 }}>
-                  <label>⏳ เวลาเริ่ม:</label>
-                  <select value={startHour} onChange={e => setStartHour(parseInt(e.target.value))}
-                    style={{ padding: "8px", borderRadius: "6px", border: "1px solid #ccc" }}>
-                    {[...Array(11)].map((_, index) => (
-                      <option key={index} value={index + 8}>{index + 8}:00</option>
-                    ))}
-                  </select>
+                  <div>
+                    <label style={{ fontWeight: "bold" }}>⏰ เวลาเริ่มจอง:</label>
+                    <select value={startHour} onChange={e => setStartHour(parseInt(e.target.value))} style={inputStyle}>
+                      {[...Array(11)].map((_, index) => (
+                        <option key={index} value={index + 8}>{index + 8}:00</option>
+                      ))}
+                    </select>
+                  </div>
 
-                  <label>⌛ เวลาสิ้นสุด:</label>
-                  <select value={endHour} onChange={e => setEndHour(parseInt(e.target.value))}
-                    style={{ padding: "8px", borderRadius: "6px", border: "1px solid #ccc" }}>
-                    {[...Array(11)].map((_, index) => (
-                      <option key={index} value={index + 9}>{index + 9}:00</option>
-                    ))}
-                  </select>
+                  <div>
+                    <label style={{ fontWeight: "bold" }}>⌛ เวลาสิ้นสุดจอง:</label>
+                    <select value={endHour} onChange={e => setEndHour(parseInt(e.target.value))} style={inputStyle}>
+                      {[...Array(11)].map((_, index) => (
+                        <option key={index} value={index + 9}>{index + 9}:00</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
 

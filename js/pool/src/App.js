@@ -11,6 +11,27 @@ import Swal from "sweetalert2";
 const localizer = momentLocalizer(moment);
 
 function Room1() {
+
+  const [facilities, setFacilities] = useState({
+    pool: false,
+    grandstandA: false,
+    grandstandB: false
+  });
+
+  // ฟังก์ชันเปลี่ยนค่า Checkbox
+  const toggleFacility = (facility) => {
+    setFacilities(prev => ({
+      ...prev,
+      [facility]: !prev[facility]
+    }));
+  };
+
+
+  const selectedFacilities = Object.keys(facilities)
+    .filter(key => facilities[key]) // คัดเฉพาะที่ถูกเลือก
+    .map(key => (key === "pool" ? "สระว่ายน้ำ" : key === "grandstandA" ? "อัฒจันทร์ โซน A" : "อัฒจันทร์ โซน B"))
+    .join(", "); // รวมเป็นข้อความเดียว
+
   const [eventDescription, setEventDescription] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [startHour, setStartHour] = useState(8);
@@ -45,6 +66,37 @@ function Room1() {
     return <></>;
   }
 
+  async function updateEventStatus(event, status) {
+    const updatedEvent = {
+      ...event,
+      description: event.description.replace(/สถานะ: .*/, `สถานะ: ${status}`),
+    };
+
+    try {
+      const response = await fetch(
+        `https://www.googleapis.com/calendar/v3/calendars/${event.calendarId}/events/${event.id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: 'Bearer ' + session.provider_token,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedEvent),
+        }
+      );
+
+      if (!response.ok) throw new Error("ไม่สามารถอัปเดตสถานะได้");
+
+      Swal.fire("สำเร็จ", `สถานะถูกเปลี่ยนเป็น "${status}"`, "success");
+      // รีเฟรชข้อมูลเหตุการณ์
+      getCalendarEvents().then(fetchedEvents => setEvents(fetchedEvents));
+    } catch (error) {
+      console.error("เกิดข้อผิดพลาดในการอัปเดตสถานะ:", error);
+      Swal.fire("ผิดพลาด", "ไม่สามารถอัปเดตสถานะได้", "error");
+    }
+  }
+
+
   async function googleSignIn() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -76,23 +128,23 @@ function Room1() {
 
     const data = await response.json();
     return data.items.map(event => {
-      let status = "รอชำระเงิน"; // ✅ ค่าเริ่มต้น (Default)
+      let status = "รอชำระเงิน"; // ค่าเริ่มต้น
 
-      // ✅ ตรวจสอบว่า "description" มีค่าหรือไม่ (ป้องกัน Error)
-      const desc = event.description?.trim() || ""; // ✅ ใช้ `trim()` เพื่อลบช่องว่าง
-      const statusMatch = desc.match(/สถานะ:\s*(อนุมัติ|ปฏิเสธ)/);
+      // ตรวจสอบว่า "description" มีค่าหรือไม่
+      const desc = event.description?.trim() || "";
+      const statusMatch = desc.match(/สถานะ:\s*(อนุมัติ|ปฏิเสธ|รออนุมัติ|รอชำระเงิน)/);
 
       if (statusMatch) {
-        status = statusMatch[1]; // ✅ ดึงค่าที่ตรงกับ "อนุมัติ" หรือ "ปฏิเสธ"
+        status = statusMatch[1]; // ดึงค่าจากสถานะที่มี
       }
 
       return {
-        id: event.id, // ✅ เก็บ ID ของ event เพื่อใช้แก้ไขภายหลัง
-        title: event.summary || "ไม่ระบุหัวข้อ", // ✅ ป้องกัน null title
+        id: event.id, // เก็บ ID ของ event เพื่อใช้แก้ไขภายหลัง
+        title: event.summary || "ไม่ระบุหัวข้อ", // ป้องกัน null title
         start: new Date(event.start.dateTime || event.start.date),
         end: new Date(event.end.dateTime || event.end.date),
-        description: desc || "ไม่มีรายละเอียด", // ✅ ป้องกัน null description
-        status, // ✅ ใส่สถานะของแต่ละ event
+        description: desc || "ไม่มีรายละเอียด", // ป้องกัน null description
+        status, // ใส่สถานะของแต่ละ event
       };
     });
   }
@@ -186,13 +238,14 @@ function Room1() {
     width: "48%"
   };
 
-
   const eventPropGetter = (event) => {
     let backgroundColor = "#42a5f5"; // สีเริ่มต้น (ฟ้า)
 
-    // ✅ กำหนดสีตาม "สถานะ"
-    if (event.status === "รอชำระเงิน") {
+    // กำหนดสีตามสถานะ
+    if (event.status === "รออนุมัติ") {
       backgroundColor = "#FFFF00"; // สีเหลือง
+    } else if (event.status === "รอชำระเงิน") {
+      backgroundColor = "#FFA500"; // สีส้ม
     } else if (event.status === "อนุมัติ") {
       backgroundColor = "#00FF00"; // สีเขียว
     } else if (event.status === "ปฏิเสธ") {
@@ -210,7 +263,6 @@ function Room1() {
       },
     };
   };
-
 
   async function createCalendarEvent() {
     //-----------------------------------//
@@ -263,16 +315,32 @@ function Room1() {
       return;
     }
 
-    const event = {
-      summary: "จองจองสระว่ายน้ำนนทบุรี",
-      description: `📌 **รายละเอียดการจอง**
-    - ชื่อผู้จอง: ${eventName}
-    - เบอร์โทรศัพท์: ${phone}
-    - Email ของผู้จอง: ${email}
-    - องค์กร/สำนักงาน: ${organization}
-    - วัตถุประสงค์ของการใช้: ${purpose}
-    - **สถานะ: รอชำระเงิน**`,
+    // ✅ ตรวจสอบว่าสนามไหนถูกเลือก
+    let selectedFacilities = [];
+    if (facilities.pool) selectedFacilities.push("🏊‍♂️ สระว่ายน้ำ");
+    if (facilities.grandstandA) selectedFacilities.push("🏟️ อัฒจันทร์ โซน A");
+    if (facilities.grandstandB) selectedFacilities.push("🏟️ อัฒจันทร์ โซน B");
 
+    // ✅ แปลงรายการสนามเป็นข้อความ
+    let facilitiesText = selectedFacilities.length > 0 ? selectedFacilities.join("\n    - ") : "❌ ไม่มีสิ่งอำนวยความสะดวกที่เลือก";
+
+    setFacilities({
+      pool: false,
+      grandstandA: false,
+      grandstandB: false
+    });
+
+    const event = {
+      summary: "จองสระว่ายน้ำนนทบุรี",
+      description: `📌 **รายละเอียดการจอง**\n
+      - 👤 ชื่อผู้จอง: ${eventName}\n
+      - 📞 เบอร์โทรศัพท์: ${phone}\n
+      - 📧 Email ของผู้จอง: ${email}\n
+      - 🏢 องค์กร/สำนักงาน: ${organization}\n
+      - 🎯 วัตถุประสงค์ของการใช้: ${purpose}\n
+      - **สิ่งอำนวยความสะดวกที่เลือก:**
+      - ${facilitiesText}\n
+      - ✅**สถานะ: รออนุมัติ**`,  // ใช้ \n เพื่อให้แต่ละไอเท็มขึ้นบรรทัดใหม่
       start: {
         dateTime: newStart.toISOString(), // ใช้ ISOString เพื่อให้แน่ใจว่าเป็นรูปแบบ UTC
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // ใช้ time zone ของเครื่องผู้ใช้
@@ -282,6 +350,7 @@ function Room1() {
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       }
     };
+
 
     await fetch("https://www.googleapis.com/calendar/v3/calendars/c_0e791d7dc9bdbc53eb3c7c6a3e219f18ad7f559f0908b7a18ab7268650ce4b9c@group.calendar.google.com/events", {
       method: "POST",
@@ -394,7 +463,7 @@ function Room1() {
                   borderRadius: "5px",
                   fontSize: "15px",
                   textAlign: "center",
-                  width: "150px"
+                  width: "160px"
                 }}>
                   การจองที่โดนปฎิเสธ
                 </div>
@@ -405,22 +474,34 @@ function Room1() {
                   borderRadius: "5px",
                   fontSize: "15px",
                   textAlign: "center",
-                  width: "150px"
+                  width: "160px"
                 }}>
                   การจองที่รออนุมัติ
                 </div>
                 <div style={{
-                  backgroundColor: "green",
+                  backgroundColor: "orange",
                   color: "white",
-                  padding: "5px 13px",
+                  padding: "5px 10px",
                   borderRadius: "5px",
                   fontSize: "15px",
                   textAlign: "center",
-                  width: "150px"
+                  width: "160px"
+                }}>
+                  การจองที่รอชำระเงิน
+                </div>
+                <div style={{
+                  backgroundColor: "green",
+                  color: "white",
+                  padding: "5px 10px",
+                  borderRadius: "5px",
+                  fontSize: "15px",
+                  textAlign: "center",
+                  width: "160px"
                 }}>
                   การจองที่ผ่านการอนุมัติ
                 </div>
               </div>
+
 
               {/* ปฏิทิน */}
               <BigCalendar
@@ -496,26 +577,89 @@ function Room1() {
                 </div>
               </div>
 
-              <div style={timeSelectContainer}>
-                <div style={timeSelectGroup}>
-                  <label style={labelStyle}>⏰ เวลาเริ่มจอง:</label>
-                  <select value={startHour} onChange={e => setStartHour(parseInt(e.target.value))} style={inputStyle}>
-                    {[...Array(11)].map((_, index) => (
-                      <option key={index} value={index + 8}>{index + 8}:00</option>
-                    ))}
-                  </select>
+              <div style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                width: "100%",
+                marginTop: "10px"
+              }}>
+                {/* 🕒 ส่วนเวลา */}
+                <div style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "20px",
+                  width: "100%",
+                  marginBottom: "20px"
+                }}>
+                  <div>
+                    <label style={{ fontWeight: "bold" }}>⏰ เวลาเริ่มจอง:</label>
+                    <select value={startHour} onChange={e => setStartHour(parseInt(e.target.value))} style={inputStyle}>
+                      {[...Array(11)].map((_, index) => (
+                        <option key={index} value={index + 8}>{index + 8}:00</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label style={{ fontWeight: "bold" }}>⌛ เวลาสิ้นสุดจอง:</label>
+                    <select value={endHour} onChange={e => setEndHour(parseInt(e.target.value))} style={inputStyle}>
+                      {[...Array(11)].map((_, index) => (
+                        <option key={index} value={index + 9}>{index + 9}:00</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
-                <div style={timeSelectGroup}>
-                  <label style={labelStyle}>⏳ เวลาสิ้นสุดจอง:</label>
-                  <select value={endHour} onChange={e => setEndHour(parseInt(e.target.value))} style={inputStyle}>
-                    {[...Array(11)].map((_, index) => (
-                      <option key={index} value={index + 9}>{index + 9}:00</option>
-                    ))}
-                  </select>
+                {/* 🔧 ขอใช้สิ่งอำนวยความสะดวก */}
+                <div style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  backgroundColor: "#f9f9f9",
+                  padding: "15px",
+                  borderRadius: "8px",
+                  width: "100%",
+                  maxWidth: "400px",
+                  boxShadow: "0px 4px 6px rgba(0,0,0,0.1)"
+                }}>
+                  <h3 style={{
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    textAlign: "left",
+                    marginBottom: "10px"
+                  }}>
+                    🛠 ขอใช้สิ่งอำนวยความสะดวก
+                  </h3>
+
+                  <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px"
+                  }}>
+                    {/* ✅ ปรับ checkbox ให้อยู่ชิดซ้ายเท่ากัน */}
+                    <label style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "flex-start" }}>
+                      <input type="checkbox" checked={facilities.pool} onChange={() => toggleFacility("pool")} />
+                      <span style={{ minWidth: "120px" }}>สระว่ายน้ำ</span>
+                    </label>
+
+                    <label style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "flex-start" }}>
+                      <input type="checkbox" checked={facilities.grandstandA} onChange={() => toggleFacility("grandstandA")} />
+                      <span style={{ minWidth: "120px" }}>อัฒจันทร์ โซน A</span>
+                    </label>
+
+                    <label style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "flex-start" }}>
+                      <input type="checkbox" checked={facilities.grandstandB} onChange={() => toggleFacility("grandstandB")} />
+                      <span style={{ minWidth: "120px" }}>อัฒจันทร์ โซน B</span>
+                    </label>
+                  </div>
                 </div>
+
               </div>
+
+
             </div>
+
 
             <hr />
             <div className="button-group">
@@ -621,7 +765,7 @@ function Room1() {
 
         )}
       </div>
-    </div>
+    </div >
   );
 }
 
