@@ -27,7 +27,7 @@
     <div class="loading"><span></span><span></span><span></span><span></span></div>
   </div>
   <div class="wrapper">
-    <!-- =========================
+ <!-- =========================
         Header
     =========================== --> <!-- /.Header -->
     <header id="header" class="header header-transparent" style="background-color: #7E51C8;">
@@ -35,42 +35,49 @@
         <div class="container">
           <a class="navbar-brand" href="index.html">
             <img src="assets/icons/logolight.png" class="logo1 logo-light" alt="logo">
-            <img src="assets/icons/logolight.png" class="logo1 logo-dark" alt="logo">
-            <!-- <a href="./login.html" style="color: whitesmoke"><i class="icon-user_male"></i><span>เข้าสู่ระบบ</span></a> -->
+            <img src="assets/icons/logodark.png" class="logo1 logo-dark" alt="logo">
           </a>
           <button class="navbar-toggler" type="button">
             <span class="menu-lines"><span></span></span>
           </button>
 
           <!-- Dropdown Profile -->
-          <div class="dropdown">
-            <button class="btn profile-icon" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              <i class="bi bi-person"></i> <!-- ไอคอนโปรไฟล์ -->
-            </button>
-            <ul class="dropdown-menu profile-dropdown dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-              <li>
-                <hr class="dropdown-divider">
-              <li class="nav__item"><a href="./index.html" class="nav__item-link">หน้าแรก</a></li>
-              <!-- /.nav-item -->
-              <li class="nav__item"><a href="./tiker1.html" class="nav__item-link">อาคารนนทบุรียิมเนเซียม</a></li>
-              <!-- /.nav-item -->
-              <li class="nav__item"><a href="./tiker2.html" class="nav__item-link">สนามกีฬาหญ้าเทียม</a></li>
-              <!-- /.nav-item -->
-              <li class="nav__item"><a href="./tiker3.html" class="nav__item-link">สระว่ายน้ำนนทบุรี</a></li>
-              <!-- /.nav-item -->
-              <li class="nav__item"><a href="./tiker4.html" class="nav__item-link">สนามฟุตบอลนนทบุรีสเตเดียม</a></li>
-              <!-- /.nav-item -->
-               <li class="nav__item"><a href="./uploads.html" class="nav__item-link">ส่งหลักฐานการชำระเงิน</a></li>
-              <!-- /.nav-item -->
-              <li class="nav__item"><a target="_blank" href="http://localhost:3014"
-                  class="nav__item-link">จัดการการจอง(Admin)</a></li>
-              <!-- /.nav-item admin -->
-              </li>
+          <div class="collapse navbar-collapse" id="mainNavigation">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav__item with-dropdown">
+                <a href="index.html" class="dropdown-toggle nav__item-link active">หน้าแรก</a>
+              </li><!-- /.nav-item -->
+
+              <li class="nav__item with-dropdown">
+                <a href="#" class="nav__item-link">สถานที่</a>
+                <i class="fa fa-angle-right" data-toggle="dropdown"></i>
+                <ul class="dropdown-menu">
+                  <li class="nav__item"><a href="./tiker1.html" class="nav__item-link">อาคารนนทบุรียิมเนเซียม</a></li>
+                  <!-- /.nav-item -->
+                  <li class="nav__item"><a href="./tiker2.html" class="nav__item-link">สนามกีฬาหญ้าเทียม</a></li>
+                  <!-- /.nav-item -->
+                  <li class="nav__item"><a href="./tiker3.html" class="nav__item-link">สระว่ายน้ำนนทบุรี</a></li>
+                  <!-- /.nav-item -->
+                  <li class="nav__item"><a href="./tiker4.html" class="nav__item-link">สนามฟุตบอลนนทบุรีสเตเดียม</a></li>
+                  <!-- /.nav-item -->
+                </ul><!-- /.dropdown-menu -->
+              </li><!-- /.nav-item -->
+
+              <li class="nav__item with-dropdown">
+                <a href="#" class="nav__item-link">ผู้ดูแลระบบ</a>
+                <i class="fa fa-angle-right" data-toggle="dropdown"></i>
+                <ul class="dropdown-menu">
+                  <li class="nav__item"><a href="./uploads.html" class="nav__item-link" target="_blank">ส่งหลักฐานการชำระเงิน</a></li>
+                  <!-- /.nav-item -->
+                  <li class="nav__item"><a href="http://localhost:3014" class="nav__item-link" target="_blank">จัดการการจอง</a></li>
+                  <!-- /.nav-item -->
+                </ul><!-- /.dropdown-menu -->
+              </li><!-- /.nav-item -->
             </ul>
           </div>
         </div>
       </nav><!-- /.navabr -->
+
     </header>
 
     <!-- ========================
