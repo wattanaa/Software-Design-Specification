@@ -7627,3 +7627,7 @@ textarea.form-control {
   font-weight: 900;
   font-style: italic;
 }
+
+.footer__widget-about {
+  text-align: center;
+}
