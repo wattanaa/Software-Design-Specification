@@ -698,7 +698,7 @@ function RoomAdmin() {
                       eventsRoom6}
             startAccessor="start"
             endAccessor="end"
-            style={{ height: window.innerWidth < 768 ? "400px" : "450px" }}
+            style={{ height: window.innerWidth < 768 ? "5000px" : "800px" }}
             onSelectEvent={handleEventSelect}
             eventPropGetter={eventStyleGetter}
           />
@@ -767,11 +767,15 @@ function RoomAdmin() {
             {selectedEvent && (
               <div className="container">
                 <div className="row mb-3">
-                  <div className="col-sm-4 font-weight-bold text-secondary">ชื่อห้องประชุม:</div>
+                  <div className="col-sm-4 text-secondary">
+                    <strong>ชื่อห้องประชุม:</strong>
+                  </div>
                   <div className="col-sm-8">{selectedEvent.title}</div>
                 </div>
                 <div className="row mb-3">
-                  <div className="col-sm-4 font-weight-bold text-secondary">รายละเอียด:</div>
+                  <div className="col-sm-4 text-secondary">
+                    <strong>รายละเอียด:</strong>
+                  </div>
                   <div className="col-sm-8">
                     {selectedEvent.description ? (
                       selectedEvent.description.split('\n').map((line, index) => (
