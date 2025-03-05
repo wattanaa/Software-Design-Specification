@@ -22,7 +22,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #1976d2, #42a5f5);
+            background: linear-gradient(135deg, #1976d2, #7E51C8);
             padding: 20px;
             text-align: center;
         }
@@ -127,13 +127,13 @@
 
     <div class="container">
         <img class="logo" src="./assets/icons/logobtm1.png" alt="Logo">
-        <h1>📤 ระบบอัปโหลดหลักฐานการโอน</h1>
+        <h1>ระบบอัปโหลดหลักฐานการโอน</h1>
 
         <input type="text" id="name" placeholder="ชื่อ-นามสกุล ผู้จอง" required>
         <input type="text" id="phone" placeholder="เบอร์โทร" required maxlength="10">
         <input type="file" id="fileInput" accept="image/*">
 
-        <button id="uploadBtn" onclick="uploadToDrive()">📤 อัปโหลด</button>
+        <button id="uploadBtn" onclick="uploadToDrive()">อัปโหลด</button>
 
         <div id="uploadStatus"></div>
     </div>
@@ -200,7 +200,7 @@
                 };
 
                 Swal.fire({
-                    title: "⏳ กำลังอัปโหลด...",
+                    title: "กำลังอัปโหลด...",
                     text: "กรุณารอสักครู่",
                     icon: "info",
                     showConfirmButton: false,
@@ -218,19 +218,19 @@
                 if (result.success) {
                     Swal.fire({
                         icon: "success",
-                        title: "✅ อัปโหลดสำเร็จ!",
-                        html: `📂 <a href="${result.fileUrl}" target="_blank">เปิดไฟล์ใน Google Drive</a><br>⏳ หน้าจะรีเฟรชใน 3 วินาที`,
+                        title: "อัปโหลดสำเร็จ!",
+                        html: `<a href="${result.fileUrl}" target="_blank">เปิดไฟล์ใน Google Drive</a><br>หน้าจะรีเฟรชใน 3 วินาที`,
                         confirmButtonColor: "#1565c0",
                         timer: 3000,
                         timerProgressBar: true,
                         didClose: () => {
-                            location.reload(); // 🔄 รีเฟรชหน้าเว็บ
+                            location.reload(); //รีเฟรชหน้าเว็บ
                         }
                     });
                 } else {
                     Swal.fire({
                         icon: "error",
-                        title: "❌ อัปโหลดล้มเหลว!",
+                        title: "อัปโหลดล้มเหลว!",
                         text: result.error,
                         confirmButtonColor: "#1565c0"
                     });
