@@ -2353,7 +2353,7 @@ textarea.form-control {
 }
 
 .header-transparent .navbar.fixed-navbar .nav__item .nav__item-link:before {
-  background-color: #333333;
+  background-color: #ffffff;
 }
 
 /* navbar-white */
@@ -2415,7 +2415,7 @@ textarea.form-control {
 
 .fixed-navbar .nav__item .nav__item-link {
   color: #ffffff;
-  line-height: 90px;
+  /* line-height: 90px; */
 }
 
 .fixed-navbar .logo-light {
