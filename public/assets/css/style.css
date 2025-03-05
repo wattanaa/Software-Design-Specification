@@ -2415,10 +2415,10 @@ textarea.form-control {
 
 .fixed-navbar .nav__item .nav__item-link {
   color: #ffffff;
-  /* line-height: 90px; */
+  line-height: 90px;
 }
 
-.fixed-navbar .card-subtitle-light {
+.fixed-navbar .logo-light {
   display: none;
 }
 
