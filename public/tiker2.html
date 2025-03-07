@@ -12,7 +12,7 @@
   <link href="assets/icons/logobtm.png" rel="icon">
   <!-- <link rel="stylesheet"
     href="https://fonts.googleapis.com/css?family=Roboto:400,700%7cWork+Sans:400,600,700&display=swap"> -->
-    <link
+  <link
     href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
@@ -35,43 +35,52 @@
         <div class="container">
           <a class="navbar-brand" href="index.html">
             <img src="assets/icons/logolight.png" class="logo1 logo-light" alt="logo">
-            <img src="assets/icons/logolight.png" class="logo1 logo-dark" alt="logo">
-            <!-- <a href="./login.html" style="color: whitesmoke"><i class="icon-user_male"></i><span>เข้าสู่ระบบ</span></a> -->
+            <img src="assets/icons/logodark.png" class="logo1 logo-dark" alt="logo">
           </a>
           <button class="navbar-toggler" type="button">
             <span class="menu-lines"><span></span></span>
           </button>
 
           <!-- Dropdown Profile -->
-          <div class="dropdown">
-            <button class="btn profile-icon" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              <i class="bi bi-person"></i> <!-- ไอคอนโปรไฟล์ -->
-            </button>
-            <ul class="dropdown-menu profile-dropdown dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-              <li>
-                <hr class="dropdown-divider">
-              <li class="nav__item"><a href="./index.html" class="nav__item-link">หน้าแรก</a></li>
-              <!-- /.nav-item -->
-              <li class="nav__item"><a href="./tiker1.html" class="nav__item-link">อาคารนนทบุรียิมเนเซียม</a></li>
-              <!-- /.nav-item -->
-              <li class="nav__item"><a href="./tiker2.html" class="nav__item-link">สนามกีฬาหญ้าเทียม</a></li>
-              <!-- /.nav-item -->
-              <li class="nav__item"><a href="./tiker3.html" class="nav__item-link">สระว่ายน้ำนนทบุรี</a></li>
-              <!-- /.nav-item -->
-              <li class="nav__item"><a href="./tiker4.html" class="nav__item-link">สนามฟุตบอลนนทบุรีสเตเดียม</a></li>
-              <!-- /.nav-item -->
-               <li class="nav__item"><a href="./uploads.html" class="nav__item-link">ส่งหลักฐานการชำระเงิน</a></li>
-              <!-- /.nav-item -->
-              <li class="nav__item"><a target="_blank" href="http://localhost:3014"
-                  class="nav__item-link">จัดการการจอง(Admin)</a></li>
-              <!-- /.nav-item admin -->
-              </li>
+          <div class="collapse navbar-collapse" id="mainNavigation">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav__item with-dropdown">
+                <a href="index.html" class="dropdown-toggle nav__item-link">หน้าแรก</a>
+              </li><!-- /.nav-item -->
+
+              <li class="nav__item with-dropdown">
+                <a href="#" class="nav__item-link active">สถานที่</a>
+                <i class="fa fa-angle-right" data-toggle="dropdown"></i>
+                <ul class="dropdown-menu">
+                  <li class="nav__item"><a href="./tiker1.html" class="nav__item-link">อาคารนนทบุรียิมเนเซียม</a></li>
+                  <!-- /.nav-item -->
+                  <li class="nav__item"><a href="./tiker2.html" class="nav__item-link">สนามกีฬาหญ้าเทียม</a></li>
+                  <!-- /.nav-item -->
+                  <li class="nav__item"><a href="./tiker3.html" class="nav__item-link">สระว่ายน้ำนนทบุรี</a></li>
+                  <!-- /.nav-item -->
+                  <li class="nav__item"><a href="./tiker4.html" class="nav__item-link">สนามฟุตบอลนนทบุรีสเตเดียม</a>
+                  </li>
+                  <!-- /.nav-item -->
+                </ul><!-- /.dropdown-menu -->
+              </li><!-- /.nav-item -->
+
+              <li class="nav__item with-dropdown">
+                <a href="#" class="nav__item-link">ผู้ดูแลระบบ</a>
+                <i class="fa fa-angle-right" data-toggle="dropdown"></i>
+                <ul class="dropdown-menu">
+                  <!-- <li class="nav__item"><a href="./uploads.html" class="nav__item-link"
+                      target="_blank">ส่งหลักฐานการชำระเงิน</a></li> -->
+                  <!-- /.nav-item -->
+                  <li class="nav__item"><a href="http://localhost:3014" class="nav__item-link"
+                      target="_blank">จัดการการจอง</a></li>
+                  <!-- /.nav-item -->
+                </ul><!-- /.dropdown-menu -->
+              </li><!-- /.nav-item -->
             </ul>
           </div>
         </div>
-
       </nav><!-- /.navabr -->
+
     </header>
 
     <!-- ========================
@@ -83,47 +92,53 @@
           <div class="col-12 col-md-4">
             <div class="card">
               <div class="card-body">
-                <p class="card-title" style="font-size: 24px; font-weight: bold;">🏟️ สนามกีฬาหญ้าเทียม พร้อมลู่ยางมาตรฐาน</p>
-                <hr> 
-                <p class="card-subtitle mb-2 text-muted" style="font-size: 18px; font-weight: bold;">📍 รายละเอียดสถานที่</p>
+                <p class="card-title" style="font-size: 24px; font-weight: bold;">สนามกีฬาหญ้าเทียม พร้อมลู่ยางมาตรฐาน
+                </p>
+                <hr>
+                <p class="card-subtitle mb-2 text-muted" style="font-size: 18px; font-weight: bold;">รายละเอียดสถานที่
+                </p>
                 <p class="card-text">
-                  🏆 สนามกีฬาหญ้าเทียมแห่งนี้ได้รับการออกแบบอย่างพิถีพิถัน เหมาะสำหรับทั้ง <strong>การแข่งขัน</strong>
+                  สนามกีฬาหญ้าเทียมแห่งนี้ได้รับการออกแบบอย่างพิถีพิถัน เหมาะสำหรับทั้ง <strong>การแข่งขัน</strong>
                   และ <strong>การฝึกซ้อมกีฬา</strong>
-                  🌱 ใช้ <strong>หญ้าเทียมคุณภาพสูง</strong> ที่ให้สัมผัสใกล้เคียงกับหญ้าจริง ทนทานต่อการใช้งานหนัก
-                  และสามารถรองรับทุกสภาพอากาศ
+                  ใช้ <strong>หญ้าเทียมคุณภาพสูง</strong> ที่ให้สัมผัสใกล้เคียงกับหญ้าจริง
+                  ทนทานต่อการใช้งานหนักและสามารถรองรับทุกสภาพอากาศ
                 </p>
 
-                <p class="card-subtitle mt-4 mb-2 text-muted" style="font-size: 16px; font-weight: bold;">🏃 ลู่ยางมาตรฐานระดับสากล</p>
+                <p class="card-subtitle mt-4 mb-2 text-muted" style="font-size: 16px; font-weight: bold;">
+                  ลู่ยางมาตรฐานระดับสากล</p>
                 <ul class="card-text">
-                  <li>✅ ช่วย <strong>เพิ่มประสิทธิภาพ</strong> ในการวิ่ง</li>
-                  <li>✅ ลด <strong>แรงกระแทก</strong> เพื่อป้องกันการบาดเจ็บ</li>
-                  <li>✅ ออกแบบ <strong>รองรับกีฬา</strong> หลากหลายประเภท</li>
+                  <li>ช่วย <strong>เพิ่มประสิทธิภาพ</strong> ในการวิ่ง</li>
+                  <li>ลด <strong>แรงกระแทก</strong> เพื่อป้องกันการบาดเจ็บ</li>
+                  <li>ออกแบบ <strong>รองรับกีฬา</strong> หลากหลายประเภท</li>
                 </ul>
 
-                <p class="card-subtitle mt-4 mb-2 text-muted" style="font-size: 18px; font-weight: bold;">🎯 จุดเด่นของสนามกีฬาหญ้าเทียมแห่งนี้</p>
+                <p class="card-subtitle mt-4 mb-2 text-muted" style="font-size: 18px; font-weight: bold;">
+                  จุดเด่นของสนามกีฬาหญ้าเทียมแห่งนี้</p>
                 <ul class="card-text">
-                  <li>⚽ <strong>รองรับกีฬาหลายประเภท</strong> เช่น ฟุตบอล, ฟุตซอล, รักบี้, กรีฑา</li>
-                  <li>🏅 <strong>พื้นที่กว้างขวาง</strong> สามารถรองรับนักกีฬาได้จำนวนมาก</li>
-                  <li>🌦️ <strong>ทนต่อทุกสภาพอากาศ</strong> ไม่ต้องกังวลเรื่องฝนตกหรือแดดแรง</li>
-                  <li>🎭 <strong>รองรับกิจกรรมอเนกประสงค์</strong> เช่น งานอีเวนต์ การแข่งขันระดับท้องถิ่นและระดับชาติ
+                  <li><strong>รองรับกีฬาหลายประเภท</strong> เช่น ฟุตบอล, ฟุตซอล, รักบี้, กรีฑา</li>
+                  <li><strong>พื้นที่กว้างขวาง</strong> สามารถรองรับนักกีฬาได้จำนวนมาก</li>
+                  <li><strong>ทนต่อทุกสภาพอากาศ</strong> ไม่ต้องกังวลเรื่องฝนตกหรือแดดแรง</li>
+                  <li><strong>รองรับกิจกรรมอเนกประสงค์</strong> เช่น งานอีเวนต์ การแข่งขันระดับท้องถิ่นและระดับชาติ
                   </li>
                 </ul>
 
-                <p class="card-subtitle mt-4 mb-2 text-muted" style="font-size: 18px; font-weight: bold;">📌 สรุปความสำคัญของสนามกีฬาแห่งนี้</p>
+                <p class="card-subtitle mt-4 mb-2 text-muted" style="font-size: 18px; font-weight: bold;">
+                  สรุปความสำคัญของสนามกีฬาแห่งนี้</p>
                 <p class="card-text">
-                  🌟 เป็น <strong>ศูนย์กลางของการกีฬาและการออกกำลังกาย</strong> ในชุมชน<br>
-                  🥇 รองรับการแข่งขันระดับ <strong>ท้องถิ่น</strong> และ <strong>นานาชาติ</strong><br>
-                  🏆 ให้ประสบการณ์การเล่นกีฬาที่ <strong>ปลอดภัยและมีประสิทธิภาพสูงสุด</strong>
+                  เป็น <strong>ศูนย์กลางของการกีฬาและการออกกำลังกาย</strong> ในชุมชนรองรับการแข่งขันระดับ
+                  <strong>ท้องถิ่น</strong> และ <strong>นานาชาติ</strong>ให้ประสบการณ์การเล่นกีฬาที่
+                  <strong>ปลอดภัยและมีประสิทธิภาพสูงสุด</strong>
                 </p>
 
                 <p class="text-center mt-4">
-                  <strong>🏅 "สนามกีฬาหญ้าเทียม - พื้นที่สำหรับทุกคนที่รักกีฬาและสุขภาพ" 🏆✨</strong>
+                  <strong>"สนามกีฬาหญ้าเทียม - พื้นที่สำหรับทุกคนที่รักกีฬาและสุขภาพ"</strong>
                 </p>
 
 
                 <!-- ปุ่มเปิด Popup -->
                 <div class="container d-flex justify-content-center mt-3">
-                  <button onclick="window.open('http://localhost:3011/#', '_blank')" class="btn btn-primary btn-lg">
+                  <button onclick="window.open('http://localhost:3011/#', '_blank')"
+                    class="bttn1 btn btn-outline-success" style="border-radius: 20px;">
                     สร้างคำจองสถานที่
                   </button>
                 </div>
@@ -192,17 +207,17 @@
       <div class="footer-top">
         <div class="container">
           <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-3 footer__widget footer__widget-about">
+            <div class="col-12 col-md-3 footer__widget footer__widget-about">
               <div class="footer__widget-content">
-                <img src="assets/icons/logobtm.png" alt="logo" class="mb-30" style="width: 200px; height: 200px;">
+                <img src="assets/icons/logobtm.png" alt="logo" class="mb-30"
+                  style="width: 100%; max-width: 200px; height: auto;">
               </div>
             </div><!-- /.col-lg-4 -->
-            <div class="col-6 col-sm-6 col-md-3 col-lg-9 footer__widget footer__widget-nav">
-              <p class="" style="font-size: 34px; font-weight: bold; color: black;">องค์การบริหารส่วน จังหวัดนนทบุรี
-                <br>
-              <p style="font-size: medium;">Nonthaburi Provincial Administration Organization</p>
+
+            <div class="col-12 col-md-9 footer__widget footer__widget-nav">
+              <p style="font-size: 20px; font-weight: bold; color: black;">องค์การบริหารส่วน จังหวัดนนทบุรี <br>
+                <span style="font-size: 14px;">Nonthaburi Provincial Administration Organization</span>
               </p>
-              <h6 class=""></h6>
               <div class="footer__widget-content">
                 <nav>
                   <ul class="list-unstyled">
@@ -214,14 +229,15 @@
                   </ul>
                 </nav>
               </div><!-- /.footer-widget-content -->
-            </div><!-- /.col-lg-2 -->
+            </div><!-- /.col-lg-8 -->
           </div><!-- /.row -->
         </div><!-- /.container -->
       </div><!-- /.footer-top -->
+
       <div class="container">
         <div class="footer-bottom">
           <div class="row">
-            <div class="col-sm-12 col-md-9 col-lg-9">
+            <div class="col-12 col-md-9">
               <div class="footer__copyright">
                 <nav>
                   <ul class="list-unstyled footer__copyright-links d-flex flex-wrap">
@@ -233,19 +249,20 @@
                 </nav>
                 <span>Copyright &copy; 2025 by Nonthaburi Provincial Organization</span>
                 <a href="https://nont-pro.go.th/">nont-pro.go.th</a>
-              </div><!-- /.Footer-copyright -->
+              </div><!-- /.footer-copyright -->
             </div><!-- /.col-lg-6 -->
-            <div class="col-sm-12 col-md-3 col-lg-3 d-flex align-items-center">
-              <div class="social__icons justify-content-end w-100">
+
+            <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-end">
+              <div class="social__icons">
                 <a href="https://www.facebook.com/nontprofanpage/?locale=th_TH"><i class="fa fa-facebook"></i></a>
                 <a href="https://www.youtube.com/@nontpro"><i class="fa fa-youtube"></i></a>
                 <a href="https://www.tiktok.com/@nontpro"><i class="fa fa-tiktok"></i></a>
               </div><!-- /.social-icons -->
             </div><!-- /.col-lg-6 -->
           </div><!-- /.row -->
-        </div><!-- /.Footer-bottom -->
+        </div><!-- /.footer-bottom -->
       </div><!-- /.container -->
-    </footer><!-- /.Footer -->
+    </footer><!-- /.footer -->
     <button id="scrollTopBtn"><i class="fa fa-long-arrow-up"></i></button>
 
     <div class="module__search-container">

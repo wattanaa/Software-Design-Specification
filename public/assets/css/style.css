@@ -2081,10 +2081,6 @@ textarea.form-control {
   transform: rotate(45deg);
 }
 
-.navbar .navbar-nav {
-  margin-top: 70px;
-}
-
 .navbar .nav__item {
   position: relative;
   margin-right: 29px;
@@ -2357,7 +2353,7 @@ textarea.form-control {
 }
 
 .header-transparent .navbar.fixed-navbar .nav__item .nav__item-link:before {
-  background-color: #333333;
+  background-color: #ffffff;
 }
 
 /* navbar-white */
@@ -2418,7 +2414,7 @@ textarea.form-control {
 }
 
 .fixed-navbar .nav__item .nav__item-link {
-  color: #333333;
+  color: #ffffff;
   line-height: 90px;
 }
 
@@ -7630,4 +7626,8 @@ textarea.form-control {
   font-family: "Prompt", serif;
   font-weight: 900;
   font-style: italic;
+}
+
+.footer__widget-about {
+  text-align: center;
 }
